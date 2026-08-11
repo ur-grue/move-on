@@ -44,3 +44,4 @@ htmlcov/
 
 # gstack security reports (local only)
 .gstack/
+.loki/

@@ -1,0 +1,24 @@
+<!-- Einreichungskanal: https://privacy.openai.com/policies (Privacy Portal, DSAR-Formular) -->
+
+Sehr geehrte Damen und Herren,
+
+hiermit mache ich von meinem Recht auf Löschung gemäß Art. 17 Abs. 1 der Datenschutz-Grundverordnung (DSGVO) Gebrauch.
+
+Ich fordere Sie auf, sämtliche personenbezogenen Daten, die Sie im Zusammenhang mit meinem Konto gespeichert haben, unverzüglich zu löschen. Dies umfasst insbesondere:
+
+- Sämtliche Gesprächsverläufe (Prompts und Antworten)
+- Kontodaten und Nutzungshistorie
+- Alle daraus abgeleiteten Daten (Trainingsdaten, Embeddings, Profile)
+
+Kontoinformation: $ACCOUNT_EMAIL
+Datum: $DATE
+
+Ich bitte um schriftliche Bestätigung der vollständigen Löschung innerhalb eines Monats nach Zugang dieses Schreibens (Art. 12 Abs. 3 DSGVO).
+
+Sollten Sie der Auffassung sein, dass Gründe nach Art. 17 Abs. 3 DSGVO einer Löschung entgegenstehen, bitte ich um eine detaillierte Begründung unter Angabe der konkreten Rechtsgrundlage.
+
+Mit freundlichen Grüßen
+
+---
+
+Kein Rechtsrat. Vorlage vor Verwendung prüfen. Löschungsrecht nach Art. 17 DSGVO kann nach Art. 17 Abs. 3 eingeschränkt sein (z. B. Aufbewahrungspflichten). Im Zweifelsfall Datenschutzbehörde oder Rechtsberatung konsultieren.

@@ -1,0 +1,15 @@
+# DSGVO-Löschanträge — Tracking
+
+## Checkliste
+
+| Provider | Antrag gestellt am | Frist (Versanddatum + 1 Monat) | Antwort erhalten | Eskalation |
+|----------|-------------------|-------------------------------|-----------------|------------|
+$PROVIDER_ROWS
+
+## Hinweise
+
+- Die Frist von einem Monat läuft ab Zugang des Antrags beim Verantwortlichen (Art. 12 Abs. 3 DSGVO), nicht ab dem Datum der Erstellung.
+- Tragen Sie das Versanddatum selbst ein, nachdem Sie den Antrag abgeschickt haben.
+- Bei Fristüberschreitung: Beschwerde bei der zuständigen Datenschutzbehörde einreichen.
+- Zuständig für OpenAI: Bayerisches Landesamt für Datenschutzaufsicht (BayLDA) oder Ihre nationale Behörde.
+- Zuständig für Anthropic: Die Datenschutzbehörde Ihres Wohnsitzlandes.

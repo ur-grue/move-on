@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "moveon"
+version = "0.1.0"
+description = "Extract your AI provider data. Request deletion. Move on."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+authors = [
+    {name = "snuss"},
+]
+keywords = ["gdpr", "privacy", "ai", "data-export", "right-to-erasure"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "typer>=0.12.0,<1.0.0",
+    "pydantic>=2.0.0,<3.0.0",
+]
+
+[project.scripts]
+moveon = "moveon.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/snuss/move-on"
+Issues = "https://github.com/snuss/move-on/issues"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B", "SIM", "RUF"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.5.0",
+]
