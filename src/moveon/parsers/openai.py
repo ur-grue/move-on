@@ -4,6 +4,7 @@ import json
 import sys
 import zipfile
 from collections.abc import Iterator
+from datetime import UTC
 from pathlib import Path
 
 from moveon.exceptions import ParseError
@@ -60,17 +61,23 @@ def _extract_content(message: dict) -> str:
     return f"[non-text content: {mapped}]"
 
 
-def _walk_active_path(mapping: dict) -> list[str]:
+def _walk_active_path(mapping: dict, current_node: str | None = None) -> list[str]:
     """Walk from current_node back to root via parent pointers, return node IDs in order."""
-    current_id = None
-    for node_id, node in mapping.items():
-        if not node.get("children"):
-            if current_id is None:
-                current_id = node_id
-            else:
-                parent_of_current = mapping.get(current_id, {}).get("parent")
-                parent_of_candidate = mapping.get(node_id, {}).get("parent")
-                if parent_of_candidate and not parent_of_current:
+    current_id = current_node
+
+    if current_id is None or current_id not in mapping:
+        best_depth = -1
+        for node_id, node in mapping.items():
+            if not node.get("children"):
+                depth = 0
+                nid = node_id
+                seen = set()
+                while nid and nid not in seen:
+                    seen.add(nid)
+                    depth += 1
+                    nid = mapping.get(nid, {}).get("parent")
+                if depth > best_depth:
+                    best_depth = depth
                     current_id = node_id
 
     if current_id is None:
@@ -94,7 +101,7 @@ def _parse_conversation(conv: dict) -> tuple[Conversation | None, int]:
     if not mapping:
         return None, 0
 
-    active_path = _walk_active_path(mapping)
+    active_path = _walk_active_path(mapping, conv.get("current_node"))
     active_set = set(active_path)
 
     branch_count = 0
@@ -133,10 +140,10 @@ def _parse_conversation(conv: dict) -> tuple[Conversation | None, int]:
 def _timestamp_to_iso(ts: float | int | None) -> str:
     if ts is None:
         return ""
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     try:
-        return datetime.fromtimestamp(ts, tz=timezone.utc).isoformat(timespec="seconds")
+        return datetime.fromtimestamp(ts, tz=UTC).isoformat(timespec="seconds")
     except (ValueError, OSError, OverflowError):
         return ""
 
@@ -151,9 +158,8 @@ class OpenAIParser(BaseParser):
 
     def parse(self, path: Path) -> Iterator[Conversation]:
         try:
-            with zipfile.ZipFile(path) as zf:
-                with zf.open("conversations.json") as f:
-                    data = json.load(f)
+            with zipfile.ZipFile(path) as zf, zf.open("conversations.json") as f:
+                data = json.load(f)
         except zipfile.BadZipFile as e:
             raise ParseError(f"Not a valid ZIP file: {path}") from e
         except KeyError as e:

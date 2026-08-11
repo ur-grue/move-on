@@ -1,7 +1,6 @@
 """Generate synthetic test fixtures for OpenAI and Anthropic exports."""
 
 import json
-import os
 import zipfile
 from pathlib import Path
 
@@ -15,6 +14,7 @@ def create_openai_fixture():
             "title": "Python Help",
             "create_time": 1700000000.0,
             "update_time": 1700001000.0,
+            "current_node": "msg-3",
             "mapping": {
                 "root": {
                     "id": "root",
@@ -74,6 +74,7 @@ def create_openai_fixture():
             "title": "Image Generation",
             "create_time": 1700010000.0,
             "update_time": 1700011000.0,
+            "current_node": "msg-2",
             "mapping": {
                 "root": {
                     "id": "root",
@@ -109,6 +110,7 @@ def create_openai_fixture():
             "title": "Code Execution",
             "create_time": 1700020000.0,
             "update_time": 1700021000.0,
+            "current_node": "msg-3",
             "mapping": {
                 "root": {
                     "id": "root",

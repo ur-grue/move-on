@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import os
 import sys
 import zipfile
 from pathlib import Path
@@ -21,7 +20,7 @@ from moveon.bundle import (
     write_manifest,
 )
 from moveon.erase import generate_all_erasures, generate_erasure
-from moveon.exceptions import BundleError, ManifestError, MoveonError, ParseError
+from moveon.exceptions import ParseError
 from moveon.guide import get_guide, list_providers
 from moveon.models import ManifestRun, now_iso
 from moveon.parsers import get_parser
@@ -103,7 +102,7 @@ def extract(
         parser_cls = get_parser(provider)
     except ValueError as e:
         typer.echo(str(e), err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
     _check_zip_security(export_zip)
 
@@ -119,20 +118,19 @@ def extract(
     manifest = read_manifest(bp)
 
     pm = manifest.providers.get(provider)
-    if pm and pm.runs:
-        if not force:
-            is_tty = sys.stdin.isatty()
-            if not is_tty:
-                typer.echo(
-                    "Use --force to overwrite existing extraction (non-interactive mode).",
-                    err=True,
-                )
-                raise typer.Exit(1)
-            confirm = typer.confirm(
-                f"Provider '{provider}' already extracted. Overwrite?",
+    if pm and pm.runs and not force:
+        is_tty = sys.stdin.isatty()
+        if not is_tty:
+            typer.echo(
+                "Use --force to overwrite existing extraction (non-interactive mode).",
+                err=True,
             )
-            if not confirm:
-                raise typer.Exit(0)
+            raise typer.Exit(1)
+        confirm = typer.confirm(
+            f"Provider '{provider}' already extracted. Overwrite?",
+        )
+        if not confirm:
+            raise typer.Exit(0)
 
     conversations = list(parser.parse(export_zip))
     lines = []

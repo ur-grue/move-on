@@ -9,9 +9,8 @@ import sys
 import tempfile
 from pathlib import Path
 
-from moveon.exceptions import BundleError, ManifestError
-from moveon.models import Manifest, ManifestRun
-
+from moveon.exceptions import ManifestError
+from moveon.models import Manifest
 
 BUNDLE_DIR = "MOVEON.d"
 MANIFEST_FILE = "manifest.json"

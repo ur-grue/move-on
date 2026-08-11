@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-import os
-from importlib import resources
 from pathlib import Path
 from string import Template
 
-from moveon.bundle import ensure_erase_dir, _write_secure
+from moveon.bundle import _write_secure, ensure_erase_dir
 
 
 def _load_template(name: str) -> Template:
