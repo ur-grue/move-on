@@ -4,7 +4,7 @@ class Moveon < Formula
   desc "Extract your AI provider data. Request deletion. Move on."
   homepage "https://github.com/ur-grue/move-on"
   url "https://github.com/ur-grue/move-on/archive/refs/tags/v1.0.0.tar.gz"
-  sha256 "PLACEHOLDER_SHA256"
+  sha256 "d7126a02814043553a8882b559259333a5d861c2b6b8895dde9de8cdc9a3eb71"
   license "MIT"
 
   depends_on "python@3.13"
