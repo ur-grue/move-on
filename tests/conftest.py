@@ -28,6 +28,16 @@ def corrupt_zip(fixtures_dir: Path) -> Path:
 
 
 @pytest.fixture
+def google_zip(fixtures_dir: Path) -> Path:
+    return fixtures_dir / "google-sample.zip"
+
+
+@pytest.fixture
+def meta_zip(fixtures_dir: Path) -> Path:
+    return fixtures_dir / "meta-sample.zip"
+
+
+@pytest.fixture
 def wrong_format_zip(fixtures_dir: Path) -> Path:
     return fixtures_dir / "wrong-format.zip"
 

@@ -6,11 +6,15 @@ if TYPE_CHECKING:
     from moveon.parsers.base import BaseParser
 
 from moveon.parsers.anthropic import AnthropicParser
+from moveon.parsers.google import GoogleParser
+from moveon.parsers.meta import MetaParser
 from moveon.parsers.openai import OpenAIParser
 
 REGISTRY: dict[str, type[BaseParser]] = {
     "openai": OpenAIParser,
     "anthropic": AnthropicParser,
+    "google": GoogleParser,
+    "meta": MetaParser,
 }
 
 

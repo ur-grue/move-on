@@ -31,6 +31,22 @@ class TestNetworkBlock:
             )
             assert result.exit_code == 0
 
+    def test_extract_google_no_network(self, google_zip: Path, tmp_path: Path):
+        with patch("socket.socket", BlockedSocket):
+            result = runner.invoke(
+                app,
+                ["extract", "google", str(google_zip), "--out", str(tmp_path)],
+            )
+            assert result.exit_code == 0
+
+    def test_extract_meta_no_network(self, meta_zip: Path, tmp_path: Path):
+        with patch("socket.socket", BlockedSocket):
+            result = runner.invoke(
+                app,
+                ["extract", "meta", str(meta_zip), "--out", str(tmp_path)],
+            )
+            assert result.exit_code == 0
+
     def test_erase_no_network(self, openai_zip: Path, tmp_path: Path):
         runner.invoke(
             app,

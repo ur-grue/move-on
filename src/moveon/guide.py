@@ -29,6 +29,50 @@ Erwarteter Dateiname: Ein ZIP-Archiv mit Konversationsdaten.
 
 Dann: moveon extract anthropic <heruntergeladene-datei.zip>
 """,
+    "google": """\
+Google Gemini — Datenexport über Google Takeout
+
+1. Öffne https://takeout.google.com
+2. Klicke "Auswahl aufheben" (alle Produkte abwählen)
+3. Scrolle zu "My Activity" und aktiviere nur dieses Produkt
+4. Klicke "Mehrere Formate" → ändere das Format von HTML auf JSON
+5. Klicke "Nächster Schritt" → wähle "Einmaliger Export"
+6. Wähle als Dateityp ".zip" und eine passende Dateigröße
+7. Klicke "Export erstellen"
+8. Du erhältst eine E-Mail mit einem Download-Link (kann einige Stunden dauern)
+9. Lade die ZIP-Datei herunter
+
+Erwarteter Dateiname: takeout-YYYYMMDDTHHMMSS-001.zip
+Die relevante Datei liegt unter: Takeout/My Activity/Gemini Apps/MyActivity.json
+
+Wichtig: Das Format muss auf JSON gestellt werden (Schritt 4), sonst exportiert
+Google die Daten als HTML.
+
+Dann: moveon extract google <heruntergeladene-datei.zip>
+""",
+    "meta": """\
+Meta AI — Datenexport beantragen
+
+Option A: Über Facebook "Deine Informationen herunterladen"
+1. Öffne https://accountscenter.facebook.com/info_and_permissions/dyi
+2. Wähle "Informationen herunterladen"
+3. Wähle das Profil und "Bestimmte Informationen auswählen"
+4. Aktiviere "Nachrichten" (Messages)
+5. Wähle als Format "JSON" und den gewünschten Zeitraum
+6. Klicke "Anfrage senden"
+7. Du erhältst eine Benachrichtigung, wenn der Download bereitsteht
+
+Option B: Über die Meta AI App
+1. Öffne die Meta AI App oder meta.ai
+2. Gehe zu Menü → Einstellungen → Datenschutz und Sicherheit
+3. Wähle "Deine Informationen verwalten" → "Informationen herunterladen"
+4. Erstelle den Export im JSON-Format
+
+Erwarteter Dateiname: facebook-<nutzername>-<datum>.zip
+Meta AI Gespräche liegen unter: your_facebook_activity/messages/inbox/
+
+Dann: moveon extract meta <heruntergeladene-datei.zip>
+""",
 }
 
 

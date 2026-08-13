@@ -6,15 +6,22 @@ from pathlib import Path
 from typer.testing import CliRunner
 
 from moveon.cli import app
+from moveon.guide import GUIDES
+from moveon.parsers import REGISTRY
 
 runner = CliRunner()
+
+
+class TestRegistrySync:
+    def test_parser_and_guide_registries_match(self):
+        assert set(REGISTRY.keys()) == set(GUIDES.keys())
 
 
 class TestVersion:
     def test_version_flag(self):
         result = runner.invoke(app, ["--version"])
         assert result.exit_code == 0
-        assert "0.1.0" in result.output
+        assert "0.2.0" in result.output
 
 
 class TestHelp:
@@ -33,6 +40,8 @@ class TestGuide:
         assert result.exit_code == 0
         assert "openai" in result.output
         assert "anthropic" in result.output
+        assert "google" in result.output
+        assert "meta" in result.output
 
     def test_guide_openai(self):
         result = runner.invoke(app, ["guide", "openai"])
@@ -62,6 +71,24 @@ class TestExtract:
         assert result.exit_code == 0
         assert "Extracted" in result.output
         assert "3 conversations" in result.output
+
+    def test_extract_google(self, google_zip: Path, tmp_bundle: Path):
+        result = runner.invoke(app, ["extract", "google", str(google_zip), "--out", str(tmp_bundle)])
+        assert result.exit_code == 0
+        assert "Extracted" in result.output
+        assert "3 conversations" in result.output
+
+        bp = tmp_bundle / "MOVEON.d"
+        assert (bp / "raw" / "google" / "messages.jsonl").exists()
+
+    def test_extract_meta(self, meta_zip: Path, tmp_bundle: Path):
+        result = runner.invoke(app, ["extract", "meta", str(meta_zip), "--out", str(tmp_bundle)])
+        assert result.exit_code == 0
+        assert "Extracted" in result.output
+        assert "3 conversations" in result.output
+
+        bp = tmp_bundle / "MOVEON.d"
+        assert (bp / "raw" / "meta" / "messages.jsonl").exists()
 
     def test_extract_corrupt_zip(self, corrupt_zip: Path, tmp_bundle: Path):
         result = runner.invoke(app, ["extract", "openai", str(corrupt_zip), "--out", str(tmp_bundle)])
