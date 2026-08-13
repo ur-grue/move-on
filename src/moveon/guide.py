@@ -73,6 +73,53 @@ Meta AI Gespräche liegen unter: your_facebook_activity/messages/inbox/
 
 Dann: moveon extract meta <heruntergeladene-datei.zip>
 """,
+    "xai": """\
+xAI / Grok — Datenexport beantragen
+
+1. Öffne https://grok.com
+2. Klicke auf dein Profilbild → Settings → Data
+3. Klicke "Export Data"
+4. Alternativ: Öffne https://accounts.x.ai/data → "Download account data"
+5. Du erhältst eine E-Mail mit einem Download-Link
+6. Lade die ZIP-Datei herunter
+
+Erwarteter Dateiname: Ein ZIP-Archiv mit prod-grok-backend.json (Konversationen)
+und weiteren Dateien (Profil, Billing, Assets).
+
+Dann: moveon extract xai <heruntergeladene-datei.zip>
+""",
+    "mistral": """\
+Mistral AI / Le Chat — Datenexport beantragen
+
+1. Öffne https://admin.mistral.ai/account/export
+2. Klicke "Export"
+3. Der Download startet automatisch als ZIP-Datei
+
+Erwarteter Dateiname: Ein ZIP-Archiv mit chat-{uuid}.json-Dateien (eine pro Konversation)
+und optionalen chat-{uuid}-files/-Verzeichnissen für Anhänge.
+
+Hinweis: Die Konversationen haben keinen Titel im Export — Move On verwendet
+die erste Nutzernachricht als Titel.
+
+Dann: moveon extract mistral <heruntergeladene-datei.zip>
+""",
+    "perplexity": """\
+Perplexity AI — Datenexport beantragen
+
+1. Öffne https://www.perplexity.ai
+2. Klicke auf dein Profilbild → Settings → Account
+3. Scrolle zu "Export Data" und klicke den Button
+4. Bestätige den Export
+5. Du erhältst eine E-Mail mit einem Download-Link (verfällt nach 24 Stunden)
+6. Lade die ZIP-Datei herunter
+
+Alternative: Sende eine E-Mail an privacy@perplexity.ai mit dem Betreff
+"Data Export Request" (Antwort innerhalb von 30 Tagen).
+
+Erwarteter Dateiname: perplexity-data-export-YYYY-MM-DD.zip
+
+Dann: moveon extract perplexity <heruntergeladene-datei.zip>
+""",
 }
 
 

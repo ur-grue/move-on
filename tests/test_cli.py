@@ -21,7 +21,7 @@ class TestVersion:
     def test_version_flag(self):
         result = runner.invoke(app, ["--version"])
         assert result.exit_code == 0
-        assert "0.3.0" in result.output
+        assert "0.5.0" in result.output
 
 
 class TestHelp:
@@ -42,6 +42,9 @@ class TestGuide:
         assert "anthropic" in result.output
         assert "google" in result.output
         assert "meta" in result.output
+        assert "xai" in result.output
+        assert "mistral" in result.output
+        assert "perplexity" in result.output
 
     def test_guide_openai(self):
         result = runner.invoke(app, ["guide", "openai"])
@@ -89,6 +92,33 @@ class TestExtract:
 
         bp = tmp_bundle / "MOVEON.d"
         assert (bp / "raw" / "meta" / "messages.jsonl").exists()
+
+    def test_extract_xai(self, xai_zip: Path, tmp_bundle: Path):
+        result = runner.invoke(app, ["extract", "xai", str(xai_zip), "--out", str(tmp_bundle)])
+        assert result.exit_code == 0
+        assert "Extracted" in result.output
+        assert "3 conversations" in result.output
+
+        bp = tmp_bundle / "MOVEON.d"
+        assert (bp / "raw" / "xai" / "messages.jsonl").exists()
+
+    def test_extract_mistral(self, mistral_zip: Path, tmp_bundle: Path):
+        result = runner.invoke(app, ["extract", "mistral", str(mistral_zip), "--out", str(tmp_bundle)])
+        assert result.exit_code == 0
+        assert "Extracted" in result.output
+        assert "3 conversations" in result.output
+
+        bp = tmp_bundle / "MOVEON.d"
+        assert (bp / "raw" / "mistral" / "messages.jsonl").exists()
+
+    def test_extract_perplexity(self, perplexity_zip: Path, tmp_bundle: Path):
+        result = runner.invoke(app, ["extract", "perplexity", str(perplexity_zip), "--out", str(tmp_bundle)])
+        assert result.exit_code == 0
+        assert "Extracted" in result.output
+        assert "3 conversations" in result.output
+
+        bp = tmp_bundle / "MOVEON.d"
+        assert (bp / "raw" / "perplexity" / "messages.jsonl").exists()
 
     def test_extract_corrupt_zip(self, corrupt_zip: Path, tmp_bundle: Path):
         result = runner.invoke(app, ["extract", "openai", str(corrupt_zip), "--out", str(tmp_bundle)])

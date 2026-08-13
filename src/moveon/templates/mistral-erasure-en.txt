@@ -1,0 +1,25 @@
+<!-- Submission channel: https://admin.mistral.ai/account or privacy@mistral.ai -->
+
+To the Data Protection Officer,
+
+I hereby exercise my right to erasure under Article 17(1) of the General Data Protection Regulation (GDPR).
+
+I request the immediate deletion of all personal data stored in connection with my account. This includes, but is not limited to:
+
+- All conversation histories (prompts and responses) from Le Chat / Vibe
+- Account data and usage history
+- All derived data (training data, embeddings, profiles)
+- Uploaded files and attachments
+
+Account information: $ACCOUNT_EMAIL
+Date: $DATE
+
+I request written confirmation of complete deletion within one month of receipt of this request (Article 12(3) GDPR).
+
+Should you consider that grounds under Article 17(3) GDPR preclude deletion, I request a detailed justification citing the specific legal basis.
+
+Yours faithfully,
+
+---
+
+Not legal advice. Review this template before use. The right to erasure under Article 17 GDPR may be restricted under Article 17(3) (e.g., retention obligations). If in doubt, consult your data protection authority or legal counsel.

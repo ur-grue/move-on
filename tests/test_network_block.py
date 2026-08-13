@@ -47,6 +47,30 @@ class TestNetworkBlock:
             )
             assert result.exit_code == 0
 
+    def test_extract_xai_no_network(self, xai_zip: Path, tmp_path: Path):
+        with patch("socket.socket", BlockedSocket):
+            result = runner.invoke(
+                app,
+                ["extract", "xai", str(xai_zip), "--out", str(tmp_path)],
+            )
+            assert result.exit_code == 0
+
+    def test_extract_mistral_no_network(self, mistral_zip: Path, tmp_path: Path):
+        with patch("socket.socket", BlockedSocket):
+            result = runner.invoke(
+                app,
+                ["extract", "mistral", str(mistral_zip), "--out", str(tmp_path)],
+            )
+            assert result.exit_code == 0
+
+    def test_extract_perplexity_no_network(self, perplexity_zip: Path, tmp_path: Path):
+        with patch("socket.socket", BlockedSocket):
+            result = runner.invoke(
+                app,
+                ["extract", "perplexity", str(perplexity_zip), "--out", str(tmp_path)],
+            )
+            assert result.exit_code == 0
+
     def test_erase_no_network(self, openai_zip: Path, tmp_path: Path):
         runner.invoke(
             app,

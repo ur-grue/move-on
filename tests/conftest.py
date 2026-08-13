@@ -38,6 +38,21 @@ def meta_zip(fixtures_dir: Path) -> Path:
 
 
 @pytest.fixture
+def xai_zip(fixtures_dir: Path) -> Path:
+    return fixtures_dir / "xai-sample.zip"
+
+
+@pytest.fixture
+def mistral_zip(fixtures_dir: Path) -> Path:
+    return fixtures_dir / "mistral-sample.zip"
+
+
+@pytest.fixture
+def perplexity_zip(fixtures_dir: Path) -> Path:
+    return fixtures_dir / "perplexity-sample.zip"
+
+
+@pytest.fixture
 def wrong_format_zip(fixtures_dir: Path) -> Path:
     return fixtures_dir / "wrong-format.zip"
 

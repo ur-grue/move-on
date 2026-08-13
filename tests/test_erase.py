@@ -46,6 +46,53 @@ class TestEraseGeneration:
         assert oct(stat.st_mode & 0o777) == "0o600"
 
 
+    def test_xai_template(self, tmp_bundle: Path):
+        bp = ensure_bundle(tmp_bundle)
+        f = generate_erasure(bp, "xai", "de")
+        assert f.exists()
+        content = f.read_text(encoding="utf-8")
+        assert "Grok" in content
+        assert "Art. 17" in content
+
+    def test_mistral_template(self, tmp_bundle: Path):
+        bp = ensure_bundle(tmp_bundle)
+        f = generate_erasure(bp, "mistral", "de")
+        assert f.exists()
+        content = f.read_text(encoding="utf-8")
+        assert "Le Chat" in content or "Vibe" in content
+        assert "Art. 17" in content
+
+    def test_perplexity_template(self, tmp_bundle: Path):
+        bp = ensure_bundle(tmp_bundle)
+        f = generate_erasure(bp, "perplexity", "de")
+        assert f.exists()
+        content = f.read_text(encoding="utf-8")
+        assert "Suchanfragen" in content or "Threads" in content
+        assert "Art. 17" in content
+
+    def test_xai_english_template(self, tmp_bundle: Path):
+        bp = ensure_bundle(tmp_bundle)
+        f = generate_erasure(bp, "xai", "en")
+        assert f.exists()
+        content = f.read_text(encoding="utf-8")
+        assert "Grok" in content
+        assert "Article 17" in content
+
+    def test_mistral_english_template(self, tmp_bundle: Path):
+        bp = ensure_bundle(tmp_bundle)
+        f = generate_erasure(bp, "mistral", "en")
+        assert f.exists()
+        content = f.read_text(encoding="utf-8")
+        assert "Le Chat" in content or "Vibe" in content
+
+    def test_perplexity_english_template(self, tmp_bundle: Path):
+        bp = ensure_bundle(tmp_bundle)
+        f = generate_erasure(bp, "perplexity", "en")
+        assert f.exists()
+        content = f.read_text(encoding="utf-8")
+        assert "search queries" in content or "threads" in content
+
+
 class TestTracking:
     def test_generate_tracking(self, tmp_bundle: Path):
         bp = ensure_bundle(tmp_bundle)

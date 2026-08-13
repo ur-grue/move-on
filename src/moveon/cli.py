@@ -84,7 +84,7 @@ def _check_zip_security(zip_path: Path) -> None:
 
 @app.command()
 def extract(
-    provider: str = typer.Argument(help="Provider name (openai, anthropic, google, meta)"),
+    provider: str = typer.Argument(help="Provider name (openai, anthropic, google, meta, xai, mistral, perplexity)"),
     export_zip: Path = typer.Argument(
         help="Path to the export ZIP file",
         exists=True,

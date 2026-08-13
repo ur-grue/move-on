@@ -8,13 +8,19 @@ if TYPE_CHECKING:
 from moveon.parsers.anthropic import AnthropicParser
 from moveon.parsers.google import GoogleParser
 from moveon.parsers.meta import MetaParser
+from moveon.parsers.mistral import MistralParser
 from moveon.parsers.openai import OpenAIParser
+from moveon.parsers.perplexity import PerplexityParser
+from moveon.parsers.xai import XaiParser
 
 REGISTRY: dict[str, type[BaseParser]] = {
     "openai": OpenAIParser,
     "anthropic": AnthropicParser,
     "google": GoogleParser,
     "meta": MetaParser,
+    "xai": XaiParser,
+    "mistral": MistralParser,
+    "perplexity": PerplexityParser,
 }
 
 
