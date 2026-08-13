@@ -19,7 +19,11 @@ class BaseParser(ABC):
 
     @abstractmethod
     def parse(self, path: Path) -> Iterator[Conversation]:
-        """Yield normalized Conversation objects from the export archive."""
+        """Yield normalized Conversation objects from the export archive.
+
+        metadata.conversation_id must be stable and unique across exports
+        from the same provider account — moveon diff relies on this.
+        """
 
     def _load_json_from_zip(
         self, path: Path, filename_patterns: list[str],

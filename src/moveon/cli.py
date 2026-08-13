@@ -19,6 +19,7 @@ from moveon.bundle import (
     write_jsonl,
     write_manifest,
 )
+from moveon.diff import compute_diff
 from moveon.erase import generate_all_erasures, generate_erasure
 from moveon.exceptions import ParseError
 from moveon.guide import get_guide, list_providers
@@ -29,7 +30,7 @@ app = typer.Typer(
     name="moveon",
     help="Extract your AI provider data. Request deletion. Move on.",
     no_args_is_help=True,
-    add_completion=False,
+    add_completion=True,
 )
 
 MAX_UNCOMPRESSED_SIZE = 10 * 1024 * 1024 * 1024  # 10 GB
@@ -83,7 +84,7 @@ def _check_zip_security(zip_path: Path) -> None:
 
 @app.command()
 def extract(
-    provider: str = typer.Argument(help="Provider name (openai, anthropic)"),
+    provider: str = typer.Argument(help="Provider name (openai, anthropic, google, meta)"),
     export_zip: Path = typer.Argument(
         help="Path to the export ZIP file",
         exists=True,
@@ -278,3 +279,101 @@ def status(
                     typer.echo("  Integrity: ✓ output unchanged")
                 else:
                     typer.echo("  Integrity: ✗ output modified since extraction!", err=True)
+
+        pm = manifest.providers.get(provider)
+        if pm and len(pm.runs) > 1:
+            broken = manifest.verify_chain(provider)
+            if broken:
+                typer.echo(
+                    f"  Evidence Chain: ✗ broken at run(s) {broken}",
+                    err=True,
+                )
+            else:
+                typer.echo("  Evidence Chain: ✓ intact")
+
+
+@app.command()
+def diff(
+    provider: str = typer.Argument(help="Provider name"),
+    out: Path = typer.Option(Path("."), "--out", help="Parent directory for MOVEON.d/"),
+) -> None:
+    """Compare the last two extraction runs for a provider."""
+    bp = bundle_path(out)
+
+    if not bp.exists():
+        typer.echo("No MOVEON.d/ bundle found. Run 'moveon extract' first.", err=True)
+        raise typer.Exit(1)
+
+    manifest = read_manifest(bp)
+
+    pm = manifest.providers.get(provider)
+    if pm is None:
+        typer.echo(f"No extractions found for '{provider}'.", err=True)
+        raise typer.Exit(1)
+
+    if len(pm.runs) < 2:
+        typer.echo(
+            "Nur ein Export vorhanden. "
+            "Führe einen zweiten Export durch und extrahiere erneut.",
+            err=True,
+        )
+        raise typer.Exit(1)
+
+    old_run = pm.runs[-2]
+    new_run = pm.runs[-1]
+
+    if old_run.tool_version != new_run.tool_version:
+        typer.echo(
+            f"Warning: Runs stammen aus verschiedenen moveon-Versionen "
+            f"({old_run.tool_version}, {new_run.tool_version}). "
+            f"Ergebnisse können abweichen.",
+            err=True,
+        )
+
+    provider_dir = bp / "raw" / provider
+    old_index = len(pm.runs) - 2
+    old_path = provider_dir / f"messages-run-{old_index}.jsonl"
+    new_path = provider_dir / "messages.jsonl"
+
+    if not old_path.exists():
+        typer.echo(
+            f"Archived run file not found: {old_path}. "
+            "Cannot compute diff without both run files.",
+            err=True,
+        )
+        raise typer.Exit(1)
+
+    if not new_path.exists():
+        typer.echo(f"Current run file not found: {new_path}.", err=True)
+        raise typer.Exit(1)
+
+    result = compute_diff(old_path, new_path)
+
+    typer.echo(f"Diff for {provider}: Run {old_index} → {old_index + 1}")
+    typer.echo("=" * 40)
+    typer.echo(f"  Added:     {len(result.added)} conversations")
+    typer.echo(f"  Removed:   {len(result.removed)} conversations")
+    typer.echo(f"  Changed:   {len(result.changed)} conversations")
+    typer.echo(f"  Unchanged: {result.unchanged} conversations")
+
+    if result.added:
+        typer.echo("\nNew conversations:")
+        for conv in result.added:
+            title = conv.title or conv.conversation_id[:16]
+            typer.echo(f"  + {title} ({conv.message_count} messages)")
+
+    if result.removed:
+        typer.echo("\nRemoved conversations:")
+        for conv in result.removed:
+            title = conv.title or conv.conversation_id[:16]
+            typer.echo(f"  - {title} ({conv.message_count} messages)")
+
+    if result.changed:
+        typer.echo("\nChanged conversations:")
+        for old_conv, new_conv in result.changed:
+            title = new_conv.title or new_conv.conversation_id[:16]
+            delta = new_conv.message_count - old_conv.message_count
+            sign = "+" if delta > 0 else ""
+            typer.echo(
+                f"  ~ {title} ({old_conv.message_count} → {new_conv.message_count} messages, {sign}{delta})"
+            )
