@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import calendar
 import hashlib
 import json
-from datetime import datetime
+from datetime import date, datetime
+from enum import Enum
 
 from pydantic import BaseModel, Field
 
@@ -53,10 +55,34 @@ class ManifestRun(BaseModel):
         return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
+class ErasureStatus(str, Enum):
+    PENDING = "pending"
+    SENT = "sent"
+    OVERDUE = "overdue"
+    COMPLAINT_FILED = "complaint_filed"
+
+
+def calculate_deadline(sent_date: date) -> date:
+    """Calculate GDPR Art. 12(3) deadline: receipt + 1 calendar month."""
+    month = sent_date.month
+    year = sent_date.year
+    if month == 12:
+        month = 1
+        year += 1
+    else:
+        month += 1
+    last_day = calendar.monthrange(year, month)[1]
+    day = min(sent_date.day, last_day)
+    return date(year, month, day)
+
+
 class ProviderManifest(BaseModel):
     runs: list[ManifestRun] = Field(default_factory=list)
     active_run: int = 0
     chain_broken: bool = False
+    erasure_status: ErasureStatus = ErasureStatus.PENDING
+    erasure_sent_at: str | None = None
+    erasure_deadline: str | None = None
 
 
 class Manifest(BaseModel):

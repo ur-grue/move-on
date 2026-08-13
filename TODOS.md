@@ -19,3 +19,26 @@
 - [x] **Export Guides** — Anleitungen für alle drei neuen Provider.
 - [x] **Homebrew Formula** — `homebrew/moveon.rb` als Vorlage für `ur-grue/homebrew-tap`. SHA256 muss nach Release ersetzt werden.
 - [ ] **Homebrew Tap publizieren** — GitHub-Repo `ur-grue/homebrew-tap` erstellen, Formula einchecken, `brew install ur-grue/tap/moveon` testen.
+
+## v0.7
+
+- [x] **ErasureStatus Enum** — `pending | sent | overdue | complaint_filed` auf `ProviderManifest`. Nicht in `HASH_FIELDS`.
+- [x] **Fristberechnung** — Art. 12 Abs. 3 DSGVO: Zugang + 1 Kalendermonat. `calendar.monthrange()` aus stdlib, kein `dateutil`.
+- [x] **DPA-Datenbank** — `src/moveon/data/dpa.json` mit 31 Behörden (27 EU + 3 EEA + UK). Quellen: EDPB, datenanfragen.de (CC BY 4.0).
+- [x] **`moveon track`** — Versenddatum setzen, Frist berechnen, DPA anzeigen, TRACKING.md regenerieren.
+- [x] **`moveon status` erweitert** — Zeigt Fristen, Überfälligkeit, Eskalationsempfehlung.
+- [x] **`--country` Flag** — Art. 77 DSGVO: DPA-Routing nach Wohnsitz statt Provider-Jurisdiktion.
+- [x] **Provider-Jurisdiktionen** — Mapping aller 7 Provider auf EU-Niederlassung (IE für OpenAI/Anthropic/Google/Meta/xAI/Perplexity, FR für Mistral).
+
+## v1.0
+
+- [x] **`moveon escalate`** — Generiert vorausgefüllte Art.-77-Beschwerde an zuständige DPA.
+- [x] **Drei Eskalationspfade** — (1) `webbrowser.open("mailto:...")` zero-network, (2) stdout-Fallback, (3) `--send` via `smtplib` mit interaktiver Bestätigung.
+- [x] **Beschwerdetext de/en** — Enthält Evidence Chain, SHA-256, Fristnachweis, Provider-Kontakte.
+- [x] **Socket-Blocking-Tests** — Netzwerkblockade für `track` und `escalate` (mailto-Pfad). SMTP-Pfad (`--send`) explizit opt-in.
+- [x] **223 Tests bestanden** — 167 (v0.5) + 24 (tracking) + 14 (DPA) + 16 (escalate) + 2 (network).
+
+## Offen
+
+- [ ] **Homebrew Tap publizieren** — GitHub-Repo `ur-grue/homebrew-tap` erstellen, Formula einchecken, SHA256 aktualisieren.
+- [ ] **Homebrew Formula auf v1.0.0 aktualisieren** — URL und SHA256 in `homebrew/moveon.rb` nach Tag.

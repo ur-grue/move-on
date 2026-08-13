@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "moveon"
-version = "0.5.0"
+version = "1.0.0"
 description = "Extract your AI provider data. Request deletion. Move on."
 readme = "README.md"
 license = "MIT"
@@ -30,12 +30,15 @@ dependencies = [
     "pydantic>=2.0.0,<3.0.0",
 ]
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/moveon"]
+
 [project.scripts]
 moveon = "moveon.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/snuss/move-on"
-Issues = "https://github.com/snuss/move-on/issues"
+Homepage = "https://github.com/ur-grue/move-on"
+Issues = "https://github.com/ur-grue/move-on/issues"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

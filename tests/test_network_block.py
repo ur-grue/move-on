@@ -99,3 +99,32 @@ class TestNetworkBlock:
         with patch("socket.socket", BlockedSocket):
             result = runner.invoke(app, ["guide", "openai"])
             assert result.exit_code == 0
+
+    def test_track_no_network(self, openai_zip: Path, tmp_path: Path):
+        runner.invoke(
+            app,
+            ["extract", "openai", str(openai_zip), "--out", str(tmp_path)],
+        )
+        with patch("socket.socket", BlockedSocket):
+            result = runner.invoke(
+                app,
+                ["track", "openai", "--sent", "2026-08-01", "--out", str(tmp_path)],
+            )
+            assert result.exit_code == 0
+
+    def test_escalate_mailto_no_network(self, openai_zip: Path, tmp_path: Path):
+        runner.invoke(
+            app,
+            ["extract", "openai", str(openai_zip), "--out", str(tmp_path)],
+        )
+        runner.invoke(
+            app,
+            ["track", "openai", "--sent", "2026-07-01", "--out", str(tmp_path)],
+        )
+        with patch("socket.socket", BlockedSocket):
+            with patch("moveon.escalate.open_mailto", return_value=False):
+                result = runner.invoke(
+                    app,
+                    ["escalate", "openai", "--out", str(tmp_path)],
+                )
+                assert result.exit_code == 0

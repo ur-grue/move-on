@@ -42,6 +42,29 @@ def generate_tracking(bp: Path, providers: list[str]) -> Path:
     return output_file
 
 
+def generate_tracking_from_manifest(bp: Path, manifest: object) -> Path:
+    """Regenerate TRACKING.md from manifest erasure state."""
+    erase_dir = ensure_erase_dir(bp)
+
+    rows = []
+    for provider in sorted(manifest.providers.keys()):
+        pm = manifest.providers[provider]
+        sent = pm.erasure_sent_at or "___"
+        deadline = pm.erasure_deadline or "___"
+        status = pm.erasure_status.value if pm.erasure_status else "pending"
+        status_mark = {"pending": "☐", "sent": "☐", "overdue": "⚠", "complaint_filed": "☑"}
+        answered = "☐"
+        escalated = status_mark.get(status, "☐")
+        rows.append(f"| {provider} | {sent} | {deadline} | {answered} | {escalated} |")
+
+    template = _load_template("tracking.txt")
+    content = template.safe_substitute(PROVIDER_ROWS="\n".join(rows))
+
+    output_file = erase_dir / "TRACKING.md"
+    _write_secure(output_file, content)
+    return output_file
+
+
 def generate_all_erasures(bp: Path, providers: list[str]) -> list[Path]:
     files = []
     for provider in providers:

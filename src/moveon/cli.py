@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import sys
 import zipfile
+from datetime import date
 from pathlib import Path
 
 import typer
@@ -23,7 +24,8 @@ from moveon.diff import compute_diff
 from moveon.erase import generate_all_erasures, generate_erasure
 from moveon.exceptions import ParseError
 from moveon.guide import get_guide, list_providers
-from moveon.models import ManifestRun, now_iso
+from moveon.dpa import get_dpa, get_dpa_for_provider, list_countries
+from moveon.models import ErasureStatus, ManifestRun, calculate_deadline, now_iso
 from moveon.parsers import get_parser
 
 app = typer.Typer(
@@ -236,11 +238,96 @@ def erase(
 
 
 @app.command()
-def status(
-    json_output: bool = typer.Option(False, "--json", help="Machine-readable JSON output"),
+def track(
+    provider: str = typer.Argument(help="Provider name"),
+    sent: str = typer.Option(
+        ...,
+        "--sent",
+        help="Date erasure request was sent (YYYY-MM-DD)",
+    ),
+    country: str = typer.Option(
+        None,
+        "--country",
+        help="Your country code (ISO 3166-1 alpha-2) for DPA routing per Art. 77 GDPR",
+    ),
     out: Path = typer.Option(Path("."), "--out", help="Parent directory for MOVEON.d/"),
 ) -> None:
-    """Show extraction status and manifest contents."""
+    """Record when an erasure request was sent. Calculates the GDPR Art. 12(3) deadline."""
+    bp = bundle_path(out)
+
+    if not bp.exists():
+        typer.echo("No MOVEON.d/ bundle found. Run 'moveon extract' first.", err=True)
+        raise typer.Exit(1)
+
+    try:
+        sent_date = date.fromisoformat(sent)
+    except ValueError:
+        typer.echo(f"Invalid date format: {sent}. Use YYYY-MM-DD.", err=True)
+        raise typer.Exit(1)
+
+    if country and country.upper() not in list_countries():
+        typer.echo(
+            f"Unknown country code: {country}. "
+            f"Use ISO 3166-1 alpha-2 (e.g. DE, FR, AT).",
+            err=True,
+        )
+        raise typer.Exit(1)
+
+    manifest = read_manifest(bp)
+
+    pm = manifest.providers.get(provider)
+    if pm is None:
+        typer.echo(f"No extraction found for '{provider}'. Run 'moveon extract' first.", err=True)
+        raise typer.Exit(1)
+
+    deadline = calculate_deadline(sent_date)
+    pm.erasure_status = ErasureStatus.SENT
+    pm.erasure_sent_at = sent_date.isoformat()
+    pm.erasure_deadline = deadline.isoformat()
+
+    today = date.today()
+    if today > deadline:
+        pm.erasure_status = ErasureStatus.OVERDUE
+
+    write_manifest(bp, manifest)
+
+    typer.echo(f"Tracked erasure request for {provider}:")
+    typer.echo(f"  Sent:     {sent_date.isoformat()}")
+    typer.echo(f"  Deadline: {deadline.isoformat()} (Art. 12 Abs. 3 DSGVO)")
+
+    if pm.erasure_status == ErasureStatus.OVERDUE:
+        typer.echo("  Status:   OVERDUE — Frist abgelaufen!")
+
+    dpa = get_dpa_for_provider(provider, country)
+    if dpa:
+        typer.echo(f"\n  Zuständige Behörde: {dpa['authority_name_en']}")
+        if dpa.get("email"):
+            typer.echo(f"  Beschwerde-E-Mail:  {dpa['email']}")
+        elif dpa.get("complaint_url"):
+            typer.echo(f"  Beschwerde-Formular: {dpa['complaint_url']}")
+        typer.echo(f"  Website:            {dpa['website']}")
+
+    _regenerate_tracking(bp, manifest)
+
+
+def _regenerate_tracking(bp: Path, manifest: Manifest) -> None:
+    """Regenerate TRACKING.md from manifest state."""
+    from moveon.erase import generate_tracking_from_manifest
+
+    generate_tracking_from_manifest(bp, manifest)
+
+
+@app.command()
+def status(
+    json_output: bool = typer.Option(False, "--json", help="Machine-readable JSON output"),
+    country: str = typer.Option(
+        None,
+        "--country",
+        help="Your country code (ISO 3166-1 alpha-2) for DPA routing",
+    ),
+    out: Path = typer.Option(Path("."), "--out", help="Parent directory for MOVEON.d/"),
+) -> None:
+    """Show extraction status, erasure deadlines, and escalation guidance."""
     bp = bundle_path(out)
 
     if not bp.exists():
@@ -257,6 +344,9 @@ def status(
         typer.echo("Bundle exists but no providers extracted yet.")
         return
 
+    today = date.today()
+    has_overdue = False
+
     typer.echo("Move On Status")
     typer.echo("=" * 40)
 
@@ -264,6 +354,8 @@ def status(
         run = manifest.latest_run(provider)
         if run is None:
             continue
+        pm = manifest.providers[provider]
+
         typer.echo(f"\n  Provider: {provider}")
         typer.echo(f"  Source:   {run.source_file}")
         typer.echo(f"  SHA-256:  {run.sha256[:16]}...")
@@ -280,8 +372,7 @@ def status(
                 else:
                     typer.echo("  Integrity: ✗ output modified since extraction!", err=True)
 
-        pm = manifest.providers.get(provider)
-        if pm and len(pm.runs) > 1:
+        if len(pm.runs) > 1:
             broken = manifest.verify_chain(provider)
             if broken:
                 typer.echo(
@@ -290,6 +381,37 @@ def status(
                 )
             else:
                 typer.echo("  Evidence Chain: ✓ intact")
+
+        if pm.erasure_sent_at:
+            typer.echo(f"  Erasure sent: {pm.erasure_sent_at}")
+            typer.echo(f"  Deadline:     {pm.erasure_deadline}")
+
+            if pm.erasure_deadline:
+                deadline_date = date.fromisoformat(pm.erasure_deadline)
+                if pm.erasure_status == ErasureStatus.COMPLAINT_FILED:
+                    typer.echo("  Status: Beschwerde eingereicht")
+                elif today > deadline_date:
+                    pm.erasure_status = ErasureStatus.OVERDUE
+                    has_overdue = True
+                    days_over = (today - deadline_date).days
+                    typer.echo(
+                        f"  Status: ÜBERFÄLLIG seit {days_over} Tag(en)! "
+                        "→ 'moveon escalate' für Beschwerde",
+                        err=True,
+                    )
+                else:
+                    days_left = (deadline_date - today).days
+                    typer.echo(f"  Status: Frist läuft (noch {days_left} Tag(e))")
+        else:
+            typer.echo("  Erasure: Noch nicht versendet → 'moveon erase' + 'moveon track'")
+
+    if has_overdue:
+        write_manifest(bp, manifest)
+        typer.echo("\n" + "=" * 40)
+        typer.echo("Mindestens ein Provider ist überfällig.")
+        typer.echo("Nächster Schritt: 'moveon escalate <provider>' für DPA-Beschwerde.")
+
+    _regenerate_tracking(bp, manifest)
 
 
 @app.command()
@@ -377,3 +499,140 @@ def diff(
             typer.echo(
                 f"  ~ {title} ({old_conv.message_count} → {new_conv.message_count} messages, {sign}{delta})"
             )
+
+
+@app.command()
+def escalate(
+    provider: str = typer.Argument(help="Provider name"),
+    lang: str = typer.Option("de", "--lang", help="Language (de or en)"),
+    country: str = typer.Option(
+        None,
+        "--country",
+        help="Your country code (ISO 3166-1 alpha-2) for DPA routing per Art. 77 GDPR",
+    ),
+    send: bool = typer.Option(False, "--send", help="Send via SMTP instead of mailto"),
+    smtp_host: str = typer.Option(None, "--smtp-host", help="SMTP server hostname"),
+    smtp_port: int = typer.Option(587, "--smtp-port", help="SMTP server port"),
+    smtp_user: str = typer.Option(None, "--smtp-user", help="SMTP username"),
+    smtp_pass: str = typer.Option(None, "--smtp-pass", help="SMTP password"),
+    from_addr: str = typer.Option(None, "--from", help="Sender email address"),
+    out: Path = typer.Option(Path("."), "--out", help="Parent directory for MOVEON.d/"),
+) -> None:
+    """Generate and send a GDPR Art. 77 complaint to the responsible DPA."""
+    from moveon.escalate import build_complaint_text, open_mailto, send_smtp
+
+    if lang not in ("de", "en"):
+        typer.echo(f"Unsupported language: {lang}. Use 'de' or 'en'.", err=True)
+        raise typer.Exit(1)
+
+    bp = bundle_path(out)
+    if not bp.exists():
+        typer.echo("No MOVEON.d/ bundle found. Run 'moveon extract' first.", err=True)
+        raise typer.Exit(1)
+
+    manifest = read_manifest(bp)
+    pm = manifest.providers.get(provider)
+    if pm is None:
+        typer.echo(f"No extraction found for '{provider}'.", err=True)
+        raise typer.Exit(1)
+
+    if not pm.erasure_sent_at:
+        typer.echo(
+            f"Kein Löschantrag für '{provider}' vermerkt. "
+            "Zuerst 'moveon track' ausführen.",
+            err=True,
+        )
+        raise typer.Exit(1)
+
+    dpa = get_dpa_for_provider(provider, country)
+    if dpa is None:
+        typer.echo("Keine zuständige Datenschutzbehörde gefunden.", err=True)
+        raise typer.Exit(1)
+
+    subject = (
+        f"Beschwerde nach Art. 77 DSGVO — {provider}"
+        if lang == "de"
+        else f"Complaint under Art. 77 GDPR — {provider}"
+    )
+
+    body = build_complaint_text(provider, pm, manifest, bp, lang)
+
+    if send:
+        if not smtp_host:
+            typer.echo("--smtp-host required with --send.", err=True)
+            raise typer.Exit(1)
+        if not from_addr:
+            typer.echo("--from required with --send.", err=True)
+            raise typer.Exit(1)
+
+        dpa_email = dpa.get("email")
+        if not dpa_email:
+            typer.echo(
+                f"Kein E-Mail-Kontakt für {dpa['authority_name_en']}. "
+                f"Beschwerde über Webformular: {dpa.get('complaint_url', dpa['website'])}",
+                err=True,
+            )
+            raise typer.Exit(1)
+
+        is_tty = sys.stdin.isatty()
+        if is_tty:
+            typer.echo(f"Sende Beschwerde an: {dpa_email}")
+            typer.echo(f"Von: {from_addr}")
+            typer.echo(f"Via: {smtp_host}:{smtp_port}")
+            confirm = typer.confirm("Beschwerde jetzt senden?")
+            if not confirm:
+                raise typer.Exit(0)
+
+        try:
+            send_smtp(
+                smtp_host=smtp_host,
+                smtp_port=smtp_port,
+                from_addr=from_addr,
+                dpa_email=dpa_email,
+                subject=subject,
+                body=body,
+                username=smtp_user,
+                password=smtp_pass,
+            )
+            typer.echo(f"Beschwerde gesendet an {dpa_email}.")
+        except Exception as e:
+            typer.echo(f"SMTP-Fehler: {e}", err=True)
+            raise typer.Exit(1) from e
+
+        pm.erasure_status = ErasureStatus.COMPLAINT_FILED
+        write_manifest(bp, manifest)
+
+    else:
+        dpa_email = dpa.get("email")
+
+        if dpa_email:
+            opened = open_mailto(dpa_email, subject, body)
+            if opened:
+                typer.echo(f"E-Mail-Client geöffnet mit Beschwerde an {dpa_email}.")
+                typer.echo("Prüfen, absenden, und dann bestätigen.")
+
+                is_tty = sys.stdin.isatty()
+                if is_tty:
+                    confirm = typer.confirm("Beschwerde abgesendet?")
+                    if confirm:
+                        pm.erasure_status = ErasureStatus.COMPLAINT_FILED
+                        write_manifest(bp, manifest)
+                        typer.echo("Status auf 'complaint_filed' gesetzt.")
+            else:
+                typer.echo("Kein E-Mail-Client verfügbar. Beschwerde als Text:", err=True)
+                typer.echo("")
+                typer.echo(f"An: {dpa_email}")
+                typer.echo(f"Betreff: {subject}")
+                typer.echo("")
+                typer.echo(body)
+        else:
+            typer.echo(
+                f"Kein E-Mail-Kontakt für {dpa['authority_name_en']}.",
+                err=True,
+            )
+            complaint_url = dpa.get("complaint_url", dpa["website"])
+            typer.echo(f"Beschwerde über Webformular: {complaint_url}", err=True)
+            typer.echo("")
+            typer.echo("Beschwerdetext:")
+            typer.echo("")
+            typer.echo(body)

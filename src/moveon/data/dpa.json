@@ -1,0 +1,282 @@
+[
+  {
+    "country": "Austria",
+    "country_code": "AT",
+    "authority_name": "Österreichische Datenschutzbehörde",
+    "authority_name_en": "Austrian Data Protection Authority",
+    "website": "https://www.dsb.gv.at",
+    "email": "dsb@dsb.gv.at",
+    "phone": "+43 1 52 152-0"
+  },
+  {
+    "country": "Belgium",
+    "country_code": "BE",
+    "authority_name": "Autorité de protection des données / Gegevensbeschermingsautoriteit",
+    "authority_name_en": "Data Protection Authority",
+    "website": "https://www.autoriteprotectiondonnees.be",
+    "email": "contact@apd-gba.be",
+    "phone": "+32 2 274 48 00"
+  },
+  {
+    "country": "Bulgaria",
+    "country_code": "BG",
+    "authority_name": "Комисия за защита на личните данни",
+    "authority_name_en": "Commission for Personal Data Protection",
+    "website": "https://www.cpdp.bg",
+    "email": "kzld@cpdp.bg",
+    "phone": "+359 2 915 3518"
+  },
+  {
+    "country": "Croatia",
+    "country_code": "HR",
+    "authority_name": "Agencija za zaštitu osobnih podataka",
+    "authority_name_en": "Croatian Personal Data Protection Agency",
+    "website": "https://azop.hr",
+    "email": "azop@azop.hr",
+    "phone": "+385 1 4609 000"
+  },
+  {
+    "country": "Cyprus",
+    "country_code": "CY",
+    "authority_name": "Γραφείο Επιτρόπου Δεδομένων Προσωπικού Χαρακτήρα",
+    "authority_name_en": "Commissioner for Personal Data Protection",
+    "website": "http://www.dataprotection.gov.cy",
+    "email": "commissioner@dataprotection.gov.cy",
+    "phone": "+357 22 818 456"
+  },
+  {
+    "country": "Czechia",
+    "country_code": "CZ",
+    "authority_name": "Úřad pro ochranu osobních údajů",
+    "authority_name_en": "Office for Personal Data Protection",
+    "website": "https://www.uoou.cz",
+    "email": "posta@uoou.gov.cz",
+    "phone": "+420 234 665 111"
+  },
+  {
+    "country": "Denmark",
+    "country_code": "DK",
+    "authority_name": "Datatilsynet",
+    "authority_name_en": "Danish Data Protection Agency",
+    "website": "https://www.datatilsynet.dk",
+    "email": "dt@datatilsynet.dk",
+    "phone": "+45 33 19 32 00"
+  },
+  {
+    "country": "Estonia",
+    "country_code": "EE",
+    "authority_name": "Andmekaitse Inspektsioon",
+    "authority_name_en": "Estonian Data Protection Inspectorate",
+    "website": "https://www.aki.ee",
+    "email": "info@aki.ee",
+    "phone": "+372 627 4135"
+  },
+  {
+    "country": "Finland",
+    "country_code": "FI",
+    "authority_name": "Tietosuojavaltuutetun toimisto",
+    "authority_name_en": "Office of the Data Protection Ombudsman",
+    "website": "https://tietosuoja.fi",
+    "email": "tietosuoja@om.fi",
+    "phone": "+358 29 566 6700"
+  },
+  {
+    "country": "France",
+    "country_code": "FR",
+    "authority_name": "Commission Nationale de l'Informatique et des Libertés",
+    "authority_name_en": "National Commission on Informatics and Liberty",
+    "website": "https://www.cnil.fr",
+    "email": null,
+    "complaint_url": "https://www.cnil.fr/fr/plaintes",
+    "phone": "+33 1 53 73 22 22"
+  },
+  {
+    "country": "Germany",
+    "country_code": "DE",
+    "authority_name": "Der Bundesbeauftragte für den Datenschutz und die Informationsfreiheit",
+    "authority_name_en": "Federal Commissioner for Data Protection and Freedom of Information",
+    "website": "https://www.bfdi.bund.de",
+    "email": "poststelle@bfdi.bund.de",
+    "phone": "+49 228 997799-0"
+  },
+  {
+    "country": "Greece",
+    "country_code": "GR",
+    "authority_name": "Αρχή Προστασίας Δεδομένων Προσωπικού Χαρακτήρα",
+    "authority_name_en": "Hellenic Data Protection Authority",
+    "website": "https://www.dpa.gr",
+    "email": "contact@dpa.gr",
+    "phone": "+30 210 647 5600"
+  },
+  {
+    "country": "Hungary",
+    "country_code": "HU",
+    "authority_name": "Nemzeti Adatvédelmi és Információszabadság Hatóság",
+    "authority_name_en": "Hungarian National Authority for Data Protection and Freedom of Information",
+    "website": "https://www.naih.hu",
+    "email": "ugyfelszolgalat@naih.hu",
+    "phone": "+36 1 391 1400"
+  },
+  {
+    "country": "Ireland",
+    "country_code": "IE",
+    "authority_name": "An Coimisiún um Chosaint Sonraí / Data Protection Commission",
+    "authority_name_en": "Data Protection Commission",
+    "website": "https://www.dataprotection.ie",
+    "email": "info@dataprotection.ie",
+    "phone": "+353 76 110 4800"
+  },
+  {
+    "country": "Italy",
+    "country_code": "IT",
+    "authority_name": "Garante per la protezione dei dati personali",
+    "authority_name_en": "Italian Data Protection Authority",
+    "website": "https://www.garanteprivacy.it",
+    "email": "protocollo@gpdp.it",
+    "phone": "+39 06 696 771"
+  },
+  {
+    "country": "Latvia",
+    "country_code": "LV",
+    "authority_name": "Datu valsts inspekcija",
+    "authority_name_en": "Data State Inspectorate",
+    "website": "https://www.dvi.gov.lv",
+    "email": "pasts@dvi.gov.lv",
+    "phone": "+371 67 22 31 31"
+  },
+  {
+    "country": "Lithuania",
+    "country_code": "LT",
+    "authority_name": "Valstybinė duomenų apsaugos inspekcija",
+    "authority_name_en": "State Data Protection Inspectorate",
+    "website": "https://vdai.lrv.lt",
+    "email": "ada@ada.lt",
+    "phone": "+370 5 271 2804"
+  },
+  {
+    "country": "Luxembourg",
+    "country_code": "LU",
+    "authority_name": "Commission nationale pour la protection des données",
+    "authority_name_en": "National Commission for Data Protection",
+    "website": "https://cnpd.public.lu",
+    "email": "info@cnpd.lu",
+    "phone": "+352 26 10 60 1"
+  },
+  {
+    "country": "Malta",
+    "country_code": "MT",
+    "authority_name": "Uffiċċju tal-Kummissarju għall-Informazzjoni u l-Protezzjoni tad-Data",
+    "authority_name_en": "Office of the Information and Data Protection Commissioner",
+    "website": "https://idpc.org.mt",
+    "email": "idpc.info@idpc.org.mt",
+    "phone": "+356 2328 7100"
+  },
+  {
+    "country": "Netherlands",
+    "country_code": "NL",
+    "authority_name": "Autoriteit Persoonsgegevens",
+    "authority_name_en": "Dutch Data Protection Authority",
+    "website": "https://autoriteitpersoonsgegevens.nl",
+    "email": "info@autoriteitpersoonsgegevens.nl",
+    "phone": "+31 70 888 85 00"
+  },
+  {
+    "country": "Poland",
+    "country_code": "PL",
+    "authority_name": "Urząd Ochrony Danych Osobowych",
+    "authority_name_en": "Personal Data Protection Office",
+    "website": "https://uodo.gov.pl",
+    "email": "kancelaria@uodo.gov.pl",
+    "phone": "+48 22 531 03 00"
+  },
+  {
+    "country": "Portugal",
+    "country_code": "PT",
+    "authority_name": "Comissão Nacional de Proteção de Dados",
+    "authority_name_en": "National Data Protection Commission",
+    "website": "https://www.cnpd.pt",
+    "email": "geral@cnpd.pt",
+    "phone": "+351 21 392 84 00"
+  },
+  {
+    "country": "Romania",
+    "country_code": "RO",
+    "authority_name": "Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal",
+    "authority_name_en": "National Supervisory Authority for Personal Data Processing",
+    "website": "https://www.dataprotection.ro",
+    "email": "anspdcp@dataprotection.ro",
+    "phone": "+40 318 059 211"
+  },
+  {
+    "country": "Slovakia",
+    "country_code": "SK",
+    "authority_name": "Úrad na ochranu osobných údajov Slovenskej republiky",
+    "authority_name_en": "Office for Personal Data Protection of the Slovak Republic",
+    "website": "https://dataprotection.gov.sk",
+    "email": "statny.dozor@pdp.gov.sk",
+    "phone": "+421 2 323 132 14"
+  },
+  {
+    "country": "Slovenia",
+    "country_code": "SI",
+    "authority_name": "Informacijski pooblaščenec",
+    "authority_name_en": "Information Commissioner",
+    "website": "https://www.ip-rs.si",
+    "email": "gp.ip@ip-rs.si",
+    "phone": "+386 1 230 97 30"
+  },
+  {
+    "country": "Spain",
+    "country_code": "ES",
+    "authority_name": "Agencia Española de Protección de Datos",
+    "authority_name_en": "Spanish Data Protection Agency",
+    "website": "https://www.aepd.es",
+    "email": "ciudadano@aepd.es",
+    "phone": "+34 91 266 35 17"
+  },
+  {
+    "country": "Sweden",
+    "country_code": "SE",
+    "authority_name": "Integritetsskyddsmyndigheten",
+    "authority_name_en": "Swedish Authority for Privacy Protection",
+    "website": "https://www.imy.se",
+    "email": "imy@imy.se",
+    "phone": "+46 8 657 61 00"
+  },
+  {
+    "country": "Iceland",
+    "country_code": "IS",
+    "authority_name": "Persónuvernd",
+    "authority_name_en": "Icelandic Data Protection Authority",
+    "website": "https://www.personuvernd.is",
+    "email": "postur@personuvernd.is",
+    "phone": "+354 510 9600"
+  },
+  {
+    "country": "Liechtenstein",
+    "country_code": "LI",
+    "authority_name": "Datenschutzstelle",
+    "authority_name_en": "Data Protection Office",
+    "website": "https://www.datenschutzstelle.li",
+    "email": "info.dss@llv.li",
+    "phone": "+423 236 60 90"
+  },
+  {
+    "country": "Norway",
+    "country_code": "NO",
+    "authority_name": "Datatilsynet",
+    "authority_name_en": "Norwegian Data Protection Authority",
+    "website": "https://www.datatilsynet.no",
+    "email": "postkasse@datatilsynet.no",
+    "phone": "+47 22 39 69 00"
+  },
+  {
+    "country": "United Kingdom",
+    "country_code": "GB",
+    "authority_name": "Information Commissioner's Office",
+    "authority_name_en": "Information Commissioner's Office",
+    "website": "https://ico.org.uk",
+    "email": "icocasework@ico.org.uk",
+    "phone": "+44 303 123 1113"
+  }
+]

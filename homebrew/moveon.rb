@@ -3,7 +3,7 @@ class Moveon < Formula
 
   desc "Extract your AI provider data. Request deletion. Move on."
   homepage "https://github.com/ur-grue/move-on"
-  url "https://github.com/ur-grue/move-on/archive/refs/tags/v0.5.0.tar.gz"
+  url "https://github.com/ur-grue/move-on/archive/refs/tags/v1.0.0.tar.gz"
   sha256 "PLACEHOLDER_SHA256"
   license "MIT"
 
@@ -48,5 +48,7 @@ class Moveon < Formula
     assert_match "openai", shell_output("#{bin}/moveon guide")
     assert_match "xai", shell_output("#{bin}/moveon guide")
     assert_match "perplexity", shell_output("#{bin}/moveon guide")
+    assert_match "track", shell_output("#{bin}/moveon --help")
+    assert_match "escalate", shell_output("#{bin}/moveon --help")
   end
 end
