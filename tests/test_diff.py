@@ -3,12 +3,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
-
 from typer.testing import CliRunner
 
 from moveon.cli import app
-from moveon.diff import DiffResult, compute_diff
+from moveon.diff import compute_diff
 
 runner = CliRunner()
 

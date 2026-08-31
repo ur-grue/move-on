@@ -77,9 +77,8 @@ class TestDpaProviderRouting:
         assert get_dpa_for_provider("unknown_provider") is None
 
     def test_all_providers_have_jurisdiction(self):
-        from moveon.parsers import REGISTRY
-
         from moveon.dpa import PROVIDER_JURISDICTIONS
+        from moveon.parsers import REGISTRY
 
         for provider in REGISTRY:
             assert provider in PROVIDER_JURISDICTIONS, f"{provider} missing from PROVIDER_JURISDICTIONS"

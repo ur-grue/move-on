@@ -27,7 +27,7 @@ def _extract_content(msg: dict) -> str:
         elif isinstance(chunk, dict):
             chunk_type = chunk.get("type", "text")
             if chunk_type == "text":
-                parts.append(chunk.get("content", chunk.get("text", "")))
+                parts.append(chunk.get("content") or chunk.get("text") or "")
             elif chunk_type in ("tool_call", "reference", "custom_element"):
                 parts.append(f"[non-text content: {chunk_type}]")
             elif chunk_type in ("image_url", "file_reference"):

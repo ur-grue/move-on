@@ -40,5 +40,5 @@
 
 ## Offen
 
-- [ ] **Homebrew Tap publizieren** — GitHub-Repo `ur-grue/homebrew-tap` erstellen, Formula einchecken, SHA256 aktualisieren.
-- [ ] **Homebrew Formula auf v1.0.0 aktualisieren** — URL und SHA256 in `homebrew/moveon.rb` nach Tag.
+- [x] **Homebrew Tap publizieren** — GitHub-Repo `ur-grue/homebrew-tap` erstellt, Formula eingecheckt.
+- [x] **Homebrew Formula auf v1.0.0 aktualisieren** — Alle 6 Dependency-URLs und SHA256s aktualisiert (typer 0.27.1, pydantic 2.13.4, pydantic-core 2.48.0, click 8.4.2, typing-extensions 4.16.0, annotated-types 0.8.0).

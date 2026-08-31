@@ -6,7 +6,6 @@ from email.message import EmailMessage
 from pathlib import Path
 from urllib.parse import quote
 
-from moveon.dpa import get_dpa_for_provider
 from moveon.models import Manifest, ProviderManifest
 
 
@@ -37,7 +36,8 @@ def _build_complaint_de(
         f"hiermit lege ich Beschwerde gegen {provider} ein.",
         "",
         f"Am {pm.erasure_sent_at} habe ich einen Löschantrag nach Art. 17 DSGVO gestellt.",
-        f"Die Frist nach Art. 12 Abs. 3 DSGVO (ein Kalendermonat) lief am {pm.erasure_deadline} ab.",
+        f"Die Frist nach Art. 12 Abs. 3 DSGVO (ein Kalendermonat) lief am "
+        f"{pm.erasure_deadline} ab.",
         f"Bis heute ({date.today().isoformat()}) habe ich keine vollständige Antwort erhalten.",
         "",
         "Beweismittel:",
@@ -88,7 +88,8 @@ def _build_complaint_en(
         f"I hereby file a complaint against {provider}.",
         "",
         f"On {pm.erasure_sent_at}, I submitted an erasure request under Art. 17 GDPR.",
-        f"The deadline under Art. 12(3) GDPR (one calendar month) expired on {pm.erasure_deadline}.",
+        f"The deadline under Art. 12(3) GDPR (one calendar month) expired on "
+        f"{pm.erasure_deadline}.",
         f"As of today ({date.today().isoformat()}), I have not received a complete response.",
         "",
         "Evidence:",

@@ -7,7 +7,6 @@ import zipfile
 from collections.abc import Iterator
 from pathlib import Path
 
-from moveon.exceptions import ParseError
 from moveon.models import Conversation, Message, Metadata
 from moveon.parsers.base import BaseParser
 
@@ -67,7 +66,7 @@ def _group_into_conversations(
 
 
 def _time_gap_exceeds(t1: str, t2: str, max_seconds: int) -> bool:
-    from datetime import datetime, timezone
+    from datetime import datetime
 
     try:
         dt1 = datetime.fromisoformat(t1.replace("Z", "+00:00"))

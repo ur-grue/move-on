@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from moveon.models import Manifest, ManifestRun
 
-
 FIXTURE_RUN = ManifestRun(
     source_file="export.zip",
     sha256="abc123def456",

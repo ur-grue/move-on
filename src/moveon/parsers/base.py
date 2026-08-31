@@ -4,9 +4,8 @@ import json
 import sys
 import zipfile
 from abc import ABC, abstractmethod
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from pathlib import Path
-from typing import Callable
 
 from moveon.exceptions import ParseError
 from moveon.models import Conversation

@@ -50,7 +50,7 @@ def _extract_content(message: dict) -> str:
             if isinstance(part, str):
                 text_parts.append(part)
             elif isinstance(part, dict):
-                ct = part.get("content_type", part.get("asset_pointer", "unknown"))
+                ct = part.get("content_type") or part.get("asset_pointer") or "unknown"
                 if ct == "image_asset_pointer" or "image" in str(ct):
                     text_parts.append("[non-text content: image]")
                 else:

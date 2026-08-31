@@ -59,10 +59,7 @@ def _parse_thread(data: dict) -> Conversation | None:
             continue
 
         sender = msg.get("sender_name", "")
-        if sender in META_AI_SENDER_NAMES:
-            role = "assistant"
-        else:
-            role = "user"
+        role = "assistant" if sender in META_AI_SENDER_NAMES else "user"
 
         messages.append(Message(role=role, content=content))
 

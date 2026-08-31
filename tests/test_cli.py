@@ -14,7 +14,7 @@ runner = CliRunner()
 
 class TestRegistrySync:
     def test_parser_and_guide_registries_match(self):
-        assert set(REGISTRY.keys()) == set(GUIDES.keys())
+        assert set(GUIDES.keys()) == REGISTRY
 
 
 class TestVersion:

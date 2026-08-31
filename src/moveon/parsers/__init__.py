@@ -1,33 +1,35 @@
 from __future__ import annotations
 
+import importlib
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from moveon.parsers.base import BaseParser
 
-from moveon.parsers.anthropic import AnthropicParser
-from moveon.parsers.google import GoogleParser
-from moveon.parsers.meta import MetaParser
-from moveon.parsers.mistral import MistralParser
-from moveon.parsers.openai import OpenAIParser
-from moveon.parsers.perplexity import PerplexityParser
-from moveon.parsers.xai import XaiParser
-
-REGISTRY: dict[str, type[BaseParser]] = {
-    "openai": OpenAIParser,
-    "anthropic": AnthropicParser,
-    "google": GoogleParser,
-    "meta": MetaParser,
-    "xai": XaiParser,
-    "mistral": MistralParser,
-    "perplexity": PerplexityParser,
+_PARSER_PATHS: dict[str, tuple[str, str]] = {
+    "openai": ("moveon.parsers.openai", "OpenAIParser"),
+    "anthropic": ("moveon.parsers.anthropic", "AnthropicParser"),
+    "google": ("moveon.parsers.google", "GoogleParser"),
+    "meta": ("moveon.parsers.meta", "MetaParser"),
+    "xai": ("moveon.parsers.xai", "XaiParser"),
+    "mistral": ("moveon.parsers.mistral", "MistralParser"),
+    "perplexity": ("moveon.parsers.perplexity", "PerplexityParser"),
 }
+
+REGISTRY: set[str] = set(_PARSER_PATHS)
+
+_cache: dict[str, type[BaseParser]] = {}
 
 
 def get_parser(provider: str) -> type[BaseParser]:
-    parser_cls = REGISTRY.get(provider)
-    if parser_cls is None:
-        available = ", ".join(sorted(REGISTRY.keys()))
+    if provider in _cache:
+        return _cache[provider]
+    entry = _PARSER_PATHS.get(provider)
+    if entry is None:
+        available = ", ".join(sorted(_PARSER_PATHS))
         msg = f"Unknown provider '{provider}'. Available: {available}"
         raise ValueError(msg)
-    return parser_cls
+    mod = importlib.import_module(entry[0])
+    cls = getattr(mod, entry[1])
+    _cache[provider] = cls
+    return cls

@@ -1,32 +1,16 @@
 from __future__ import annotations
 
-import json
 import sys
 import zipfile
-from datetime import date
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import typer
 
+if TYPE_CHECKING:
+    from moveon.models import Manifest
+
 from moveon import __version__
-from moveon.bundle import (
-    bundle_path,
-    check_git_warnings,
-    ensure_bundle,
-    print_extraction_warning,
-    read_manifest,
-    sha256_file,
-    sha256_string,
-    write_jsonl,
-    write_manifest,
-)
-from moveon.diff import compute_diff
-from moveon.erase import generate_all_erasures, generate_erasure
-from moveon.exceptions import ParseError
-from moveon.guide import get_guide, list_providers
-from moveon.dpa import get_dpa, get_dpa_for_provider, list_countries
-from moveon.models import ErasureStatus, ManifestRun, calculate_deadline, now_iso
-from moveon.parsers import get_parser
 
 app = typer.Typer(
     name="moveon",
@@ -59,6 +43,8 @@ def main(
 
 
 def _check_zip_security(zip_path: Path) -> None:
+    from moveon.exceptions import ParseError
+
     try:
         with zipfile.ZipFile(zip_path) as zf:
             total_size = 0
@@ -86,7 +72,9 @@ def _check_zip_security(zip_path: Path) -> None:
 
 @app.command()
 def extract(
-    provider: str = typer.Argument(help="Provider name (openai, anthropic, google, meta, xai, mistral, perplexity)"),
+    provider: str = typer.Argument(
+        help="Provider name (openai, anthropic, google, meta, xai, mistral, perplexity)",
+    ),
     export_zip: Path = typer.Argument(
         help="Path to the export ZIP file",
         exists=True,
@@ -101,6 +89,19 @@ def extract(
     verbose: bool = typer.Option(False, "--verbose", help="Show additional details"),
 ) -> None:
     """Extract and normalize an AI provider data export."""
+    from moveon.bundle import (
+        check_git_warnings,
+        ensure_bundle,
+        print_extraction_warning,
+        read_manifest,
+        sha256_file,
+        sha256_string,
+        write_jsonl,
+        write_manifest,
+    )
+    from moveon.models import ManifestRun, now_iso
+    from moveon.parsers import get_parser
+
     try:
         parser_cls = get_parser(provider)
     except ValueError as e:
@@ -178,6 +179,8 @@ def guide(
     provider: str = typer.Argument(None, help="Provider name (optional)"),
 ) -> None:
     """Show export instructions for a provider."""
+    from moveon.guide import get_guide, list_providers
+
     if provider is None:
         typer.echo("Available providers:")
         for p in list_providers():
@@ -202,6 +205,10 @@ def erase(
     out: Path = typer.Option(Path("."), "--out", help="Parent directory for MOVEON.d/"),
 ) -> None:
     """Generate GDPR erasure request letters."""
+    from moveon.bundle import check_git_warnings, ensure_bundle, read_manifest
+    from moveon.erase import generate_all_erasures, generate_erasure
+    from moveon.guide import list_providers
+
     if lang not in ("de", "en"):
         typer.echo(f"Unsupported language: {lang}. Use 'de' or 'en'.", err=True)
         raise typer.Exit(1)
@@ -253,6 +260,12 @@ def track(
     out: Path = typer.Option(Path("."), "--out", help="Parent directory for MOVEON.d/"),
 ) -> None:
     """Record when an erasure request was sent. Calculates the GDPR Art. 12(3) deadline."""
+    from datetime import date
+
+    from moveon.bundle import bundle_path, read_manifest, write_manifest
+    from moveon.dpa import get_dpa_for_provider, list_countries
+    from moveon.models import ErasureStatus, calculate_deadline
+
     bp = bundle_path(out)
 
     if not bp.exists():
@@ -263,7 +276,7 @@ def track(
         sent_date = date.fromisoformat(sent)
     except ValueError:
         typer.echo(f"Invalid date format: {sent}. Use YYYY-MM-DD.", err=True)
-        raise typer.Exit(1)
+        raise typer.Exit(1) from None
 
     if country and country.upper() not in list_countries():
         typer.echo(
@@ -311,7 +324,6 @@ def track(
 
 
 def _regenerate_tracking(bp: Path, manifest: Manifest) -> None:
-    """Regenerate TRACKING.md from manifest state."""
     from moveon.erase import generate_tracking_from_manifest
 
     generate_tracking_from_manifest(bp, manifest)
@@ -328,6 +340,12 @@ def status(
     out: Path = typer.Option(Path("."), "--out", help="Parent directory for MOVEON.d/"),
 ) -> None:
     """Show extraction status, erasure deadlines, and escalation guidance."""
+    import json
+    from datetime import date
+
+    from moveon.bundle import bundle_path, read_manifest, sha256_string, write_manifest
+    from moveon.models import ErasureStatus
+
     bp = bundle_path(out)
 
     if not bp.exists():
@@ -420,6 +438,9 @@ def diff(
     out: Path = typer.Option(Path("."), "--out", help="Parent directory for MOVEON.d/"),
 ) -> None:
     """Compare the last two extraction runs for a provider."""
+    from moveon.bundle import bundle_path, read_manifest
+    from moveon.diff import compute_diff
+
     bp = bundle_path(out)
 
     if not bp.exists():
@@ -497,7 +518,8 @@ def diff(
             delta = new_conv.message_count - old_conv.message_count
             sign = "+" if delta > 0 else ""
             typer.echo(
-                f"  ~ {title} ({old_conv.message_count} → {new_conv.message_count} messages, {sign}{delta})"
+                f"  ~ {title} ({old_conv.message_count} → "
+                f"{new_conv.message_count} messages, {sign}{delta})"
             )
 
 
@@ -519,7 +541,10 @@ def escalate(
     out: Path = typer.Option(Path("."), "--out", help="Parent directory for MOVEON.d/"),
 ) -> None:
     """Generate and send a GDPR Art. 77 complaint to the responsible DPA."""
+    from moveon.bundle import bundle_path, read_manifest, write_manifest
+    from moveon.dpa import get_dpa_for_provider
     from moveon.escalate import build_complaint_text, open_mailto, send_smtp
+    from moveon.models import ErasureStatus
 
     if lang not in ("de", "en"):
         typer.echo(f"Unsupported language: {lang}. Use 'de' or 'en'.", err=True)

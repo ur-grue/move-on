@@ -76,7 +76,7 @@ class TestGoogleParserParse:
         conversations = list(parser.parse(google_zip))
         for conv in conversations:
             for msg in conv.messages:
-                assert "python tutorial" != msg.content
+                assert msg.content != "python tutorial"
 
     def test_corrupt_zip_raises(self, corrupt_zip: Path):
         parser = GoogleParser()

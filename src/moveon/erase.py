@@ -4,6 +4,7 @@ from pathlib import Path
 from string import Template
 
 from moveon.bundle import _write_secure, ensure_erase_dir
+from moveon.models import Manifest
 
 
 def _load_template(name: str) -> Template:
@@ -42,7 +43,7 @@ def generate_tracking(bp: Path, providers: list[str]) -> Path:
     return output_file
 
 
-def generate_tracking_from_manifest(bp: Path, manifest: object) -> Path:
+def generate_tracking_from_manifest(bp: Path, manifest: Manifest) -> Path:
     """Regenerate TRACKING.md from manifest erasure state."""
     erase_dir = ensure_erase_dir(bp)
 
