@@ -1,5 +1,10 @@
 # Move On
 
+[![PyPI](https://img.shields.io/pypi/v/moveon)](https://pypi.org/project/moveon/)
+[![Python](https://img.shields.io/pypi/pyversions/moveon)](https://pypi.org/project/moveon/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/ur-grue/move-on/actions/workflows/ci.yml/badge.svg)](https://github.com/ur-grue/move-on/actions/workflows/ci.yml)
+
 **Extract your AI data. Request deletion. Move on.**
 
 Move On parses your AI chat exports into a portable format, generates ready-to-send GDPR erasure requests, tracks deadlines, and escalates to data protection authorities when providers don't respond.

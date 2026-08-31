@@ -54,6 +54,7 @@ moveon = "moveon.cli:app"
 [project.urls]
 Homepage = "https://github.com/ur-grue/move-on"
 Issues = "https://github.com/ur-grue/move-on/issues"
+Changelog = "https://github.com/ur-grue/move-on/blob/main/CHANGELOG.md"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
