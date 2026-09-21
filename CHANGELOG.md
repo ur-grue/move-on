@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.1.0 — 2026-09-21
 
 - Consistent English CLI output and export guides (letter templates remain de/en)
 - `erase` and `escalate` default to `--lang en`; use `--lang de` for German letters

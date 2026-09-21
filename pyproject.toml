@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "moveon"
-version = "1.0.0"
+version = "1.1.0"
 description = "Extract your AI provider data. Request deletion. Move on."
 readme = "README.md"
 license = "MIT"
