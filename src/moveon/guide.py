@@ -2,123 +2,123 @@ from __future__ import annotations
 
 GUIDES: dict[str, str] = {
     "openai": """\
-OpenAI / ChatGPT — Datenexport beantragen
+OpenAI / ChatGPT — request your data export
 
-1. Öffne https://chatgpt.com
-2. Klicke auf dein Profilbild (unten links) → Settings
-3. Wähle "Data controls"
-4. Klicke "Export data" → "Confirm export"
-5. Du erhältst eine E-Mail mit einem Download-Link (kann bis zu 24h dauern)
-6. Lade die ZIP-Datei herunter
+1. Open https://chatgpt.com
+2. Click your profile picture (bottom left) → Settings
+3. Choose "Data controls"
+4. Click "Export data" → "Confirm export"
+5. You receive an email with a download link (can take up to 24 hours)
+6. Download the ZIP file
 
-Erwarteter Dateiname: Ein ZIP-Archiv mit conversations.json und weiteren Dateien.
+Expected file: a ZIP archive containing conversations.json and other files.
 
-Dann: moveon extract openai <heruntergeladene-datei.zip>
+Then: moveon extract openai <downloaded-file.zip>
 """,
     "anthropic": """\
-Anthropic / Claude — Datenexport beantragen
+Anthropic / Claude — request your data export
 
-1. Öffne https://claude.ai
-2. Klicke auf dein Profilbild → Settings
-3. Wähle "Account" → "Export Data"
-4. Bestätige den Export
-5. Du erhältst eine E-Mail mit einem Download-Link
-6. Lade die ZIP-Datei herunter
+1. Open https://claude.ai
+2. Click your profile picture → Settings
+3. Choose "Account" → "Export Data"
+4. Confirm the export
+5. You receive an email with a download link
+6. Download the ZIP file
 
-Erwarteter Dateiname: Ein ZIP-Archiv mit Konversationsdaten.
+Expected file: a ZIP archive containing your conversation data.
 
-Dann: moveon extract anthropic <heruntergeladene-datei.zip>
+Then: moveon extract anthropic <downloaded-file.zip>
 """,
     "google": """\
-Google Gemini — Datenexport über Google Takeout
+Google Gemini — export via Google Takeout
 
-1. Öffne https://takeout.google.com
-2. Klicke "Auswahl aufheben" (alle Produkte abwählen)
-3. Scrolle zu "My Activity" und aktiviere nur dieses Produkt
-4. Klicke "Mehrere Formate" → ändere das Format von HTML auf JSON
-5. Klicke "Nächster Schritt" → wähle "Einmaliger Export"
-6. Wähle als Dateityp ".zip" und eine passende Dateigröße
-7. Klicke "Export erstellen"
-8. Du erhältst eine E-Mail mit einem Download-Link (kann einige Stunden dauern)
-9. Lade die ZIP-Datei herunter
+1. Open https://takeout.google.com
+2. Click "Deselect all"
+3. Scroll to "My Activity" and select only this product
+4. Click "Multiple formats" → change the format from HTML to JSON
+5. Click "Next step" → choose "Export once"
+6. Choose ".zip" as file type and a suitable file size
+7. Click "Create export"
+8. You receive an email with a download link (can take a few hours)
+9. Download the ZIP file
 
-Erwarteter Dateiname: takeout-YYYYMMDDTHHMMSS-001.zip
-Die relevante Datei liegt unter: Takeout/My Activity/Gemini Apps/MyActivity.json
+Expected file: takeout-YYYYMMDDTHHMMSS-001.zip
+The relevant file is: Takeout/My Activity/Gemini Apps/MyActivity.json
 
-Wichtig: Das Format muss auf JSON gestellt werden (Schritt 4), sonst exportiert
-Google die Daten als HTML.
+Important: the format must be set to JSON (step 4); otherwise Google
+exports the data as HTML.
 
-Dann: moveon extract google <heruntergeladene-datei.zip>
+Then: moveon extract google <downloaded-file.zip>
 """,
     "meta": """\
-Meta AI — Datenexport beantragen
+Meta AI — request your data export
 
-Option A: Über Facebook "Deine Informationen herunterladen"
-1. Öffne https://accountscenter.facebook.com/info_and_permissions/dyi
-2. Wähle "Informationen herunterladen"
-3. Wähle das Profil und "Bestimmte Informationen auswählen"
-4. Aktiviere "Nachrichten" (Messages)
-5. Wähle als Format "JSON" und den gewünschten Zeitraum
-6. Klicke "Anfrage senden"
-7. Du erhältst eine Benachrichtigung, wenn der Download bereitsteht
+Option A: via Facebook "Download your information"
+1. Open https://accountscenter.facebook.com/info_and_permissions/dyi
+2. Choose "Download information"
+3. Select the profile and "Select types of information"
+4. Enable "Messages"
+5. Choose "JSON" as format and the date range you want
+6. Click "Submit request"
+7. You receive a notification when the download is ready
 
-Option B: Über die Meta AI App
-1. Öffne die Meta AI App oder meta.ai
-2. Gehe zu Menü → Einstellungen → Datenschutz und Sicherheit
-3. Wähle "Deine Informationen verwalten" → "Informationen herunterladen"
-4. Erstelle den Export im JSON-Format
+Option B: via the Meta AI app
+1. Open the Meta AI app or meta.ai
+2. Go to Menu → Settings → Privacy and security
+3. Choose "Manage your information" → "Download information"
+4. Create the export in JSON format
 
-Erwarteter Dateiname: facebook-<nutzername>-<datum>.zip
-Meta AI Gespräche liegen unter: your_facebook_activity/messages/inbox/
+Expected file: facebook-<username>-<date>.zip
+Meta AI conversations are under: your_facebook_activity/messages/inbox/
 
-Dann: moveon extract meta <heruntergeladene-datei.zip>
+Then: moveon extract meta <downloaded-file.zip>
 """,
     "xai": """\
-xAI / Grok — Datenexport beantragen
+xAI / Grok — request your data export
 
-1. Öffne https://grok.com
-2. Klicke auf dein Profilbild → Settings → Data
-3. Klicke "Export Data"
-4. Alternativ: Öffne https://accounts.x.ai/data → "Download account data"
-5. Du erhältst eine E-Mail mit einem Download-Link
-6. Lade die ZIP-Datei herunter
+1. Open https://grok.com
+2. Click your profile picture → Settings → Data
+3. Click "Export Data"
+4. Alternatively: open https://accounts.x.ai/data → "Download account data"
+5. You receive an email with a download link
+6. Download the ZIP file
 
-Erwarteter Dateiname: Ein ZIP-Archiv mit prod-grok-backend.json (Konversationen)
-und weiteren Dateien (Profil, Billing, Assets).
+Expected file: a ZIP archive containing prod-grok-backend.json (conversations)
+and other files (profile, billing, assets).
 
-Dann: moveon extract xai <heruntergeladene-datei.zip>
+Then: moveon extract xai <downloaded-file.zip>
 """,
     "mistral": """\
-Mistral AI / Le Chat — Datenexport beantragen
+Mistral AI / Le Chat — request your data export
 
-1. Öffne https://admin.mistral.ai/account/export
-2. Klicke "Export"
-3. Der Download startet automatisch als ZIP-Datei
+1. Open https://admin.mistral.ai/account/export
+2. Click "Export"
+3. The download starts automatically as a ZIP file
 
-Erwarteter Dateiname: Ein ZIP-Archiv mit chat-{uuid}.json-Dateien (eine pro Konversation)
-und optionalen chat-{uuid}-files/-Verzeichnissen für Anhänge.
+Expected file: a ZIP archive containing chat-{uuid}.json files (one per
+conversation) and optional chat-{uuid}-files/ directories for attachments.
 
-Hinweis: Die Konversationen haben keinen Titel im Export — Move On verwendet
-die erste Nutzernachricht als Titel.
+Note: conversations carry no title in the export — Move On uses the first
+user message as the title.
 
-Dann: moveon extract mistral <heruntergeladene-datei.zip>
+Then: moveon extract mistral <downloaded-file.zip>
 """,
     "perplexity": """\
-Perplexity AI — Datenexport beantragen
+Perplexity AI — request your data export
 
-1. Öffne https://www.perplexity.ai
-2. Klicke auf dein Profilbild → Settings → Account
-3. Scrolle zu "Export Data" und klicke den Button
-4. Bestätige den Export
-5. Du erhältst eine E-Mail mit einem Download-Link (verfällt nach 24 Stunden)
-6. Lade die ZIP-Datei herunter
+1. Open https://www.perplexity.ai
+2. Click your profile picture → Settings → Account
+3. Scroll to "Export Data" and click the button
+4. Confirm the export
+5. You receive an email with a download link (expires after 24 hours)
+6. Download the ZIP file
 
-Alternative: Sende eine E-Mail an privacy@perplexity.ai mit dem Betreff
-"Data Export Request" (Antwort innerhalb von 30 Tagen).
+Alternative: email privacy@perplexity.ai with the subject
+"Data Export Request" (reply within 30 days).
 
-Erwarteter Dateiname: perplexity-data-export-YYYY-MM-DD.zip
+Expected file: perplexity-data-export-YYYY-MM-DD.zip
 
-Dann: moveon extract perplexity <heruntergeladene-datei.zip>
+Then: moveon extract perplexity <downloaded-file.zip>
 """,
 }
 

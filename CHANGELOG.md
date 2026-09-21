@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Consistent English CLI output (letter templates remain de/en)
+- Consistent English CLI output and export guides (letter templates remain de/en)
 - `erase` and `escalate` default to `--lang en`; use `--lang de` for German letters
 - Corrupt or invalid export archives report a one-line error instead of a traceback
 - Tracebacks no longer print local variables (they can contain chat content)
