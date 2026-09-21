@@ -123,7 +123,7 @@ class TestDiffCLI:
         runner.invoke(app, ["extract", "openai", str(openai_zip), "--out", str(tmp_path)])
         result = runner.invoke(app, ["diff", "openai", "--out", str(tmp_path)])
         assert result.exit_code == 1
-        assert "Nur ein Export" in result.output or "Nur ein Export" in (result.stderr or "")
+        assert "Only one extraction run" in result.output
 
     def test_diff_two_runs(self, openai_zip: Path, tmp_path: Path):
         runner.invoke(app, ["extract", "openai", str(openai_zip), "--out", str(tmp_path)])

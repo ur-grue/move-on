@@ -232,7 +232,7 @@ def erase(
         if provider not in (manifest.provider_names()):
             typer.echo(
                 f"Warning: No export for '{provider}' in manifest. "
-                "Export verifizieren vor Löschung empfohlen.",
+                "Extract and verify your export before requesting deletion.",
                 err=True,
             )
         f = generate_erasure(bp, provider, lang)
@@ -306,18 +306,18 @@ def track(
 
     typer.echo(f"Tracked erasure request for {provider}:")
     typer.echo(f"  Sent:     {sent_date.isoformat()}")
-    typer.echo(f"  Deadline: {deadline.isoformat()} (Art. 12 Abs. 3 DSGVO)")
+    typer.echo(f"  Deadline: {deadline.isoformat()} (Art. 12(3) GDPR)")
 
     if pm.erasure_status == ErasureStatus.OVERDUE:
-        typer.echo("  Status:   OVERDUE — Frist abgelaufen!")
+        typer.echo("  Status:   OVERDUE — deadline has passed")
 
     dpa = get_dpa_for_provider(provider, country)
     if dpa:
-        typer.echo(f"\n  Zuständige Behörde: {dpa['authority_name_en']}")
+        typer.echo(f"\n  Supervisory authority: {dpa['authority_name_en']}")
         if dpa.get("email"):
-            typer.echo(f"  Beschwerde-E-Mail:  {dpa['email']}")
+            typer.echo(f"  Complaint email:       {dpa['email']}")
         elif dpa.get("complaint_url"):
-            typer.echo(f"  Beschwerde-Formular: {dpa['complaint_url']}")
+            typer.echo(f"  Complaint form:        {dpa['complaint_url']}")
         typer.echo(f"  Website:            {dpa['website']}")
 
     _regenerate_tracking(bp, manifest)
@@ -407,27 +407,27 @@ def status(
             if pm.erasure_deadline:
                 deadline_date = date.fromisoformat(pm.erasure_deadline)
                 if pm.erasure_status == ErasureStatus.COMPLAINT_FILED:
-                    typer.echo("  Status: Beschwerde eingereicht")
+                    typer.echo("  Status: complaint filed")
                 elif today > deadline_date:
                     pm.erasure_status = ErasureStatus.OVERDUE
                     has_overdue = True
                     days_over = (today - deadline_date).days
                     typer.echo(
-                        f"  Status: ÜBERFÄLLIG seit {days_over} Tag(en)! "
-                        "→ 'moveon escalate' für Beschwerde",
+                        f"  Status: OVERDUE by {days_over} day(s) "
+                        "→ run 'moveon escalate' to file a complaint",
                         err=True,
                     )
                 else:
                     days_left = (deadline_date - today).days
-                    typer.echo(f"  Status: Frist läuft (noch {days_left} Tag(e))")
+                    typer.echo(f"  Status: deadline running ({days_left} day(s) left)")
         else:
-            typer.echo("  Erasure: Noch nicht versendet → 'moveon erase' + 'moveon track'")
+            typer.echo("  Erasure: not sent yet → 'moveon erase' + 'moveon track'")
 
     if has_overdue:
         write_manifest(bp, manifest)
         typer.echo("\n" + "=" * 40)
-        typer.echo("Mindestens ein Provider ist überfällig.")
-        typer.echo("Nächster Schritt: 'moveon escalate <provider>' für DPA-Beschwerde.")
+        typer.echo("At least one provider is overdue.")
+        typer.echo("Next step: 'moveon escalate <provider>' to file a DPA complaint.")
 
     _regenerate_tracking(bp, manifest)
 
@@ -456,8 +456,8 @@ def diff(
 
     if len(pm.runs) < 2:
         typer.echo(
-            "Nur ein Export vorhanden. "
-            "Führe einen zweiten Export durch und extrahiere erneut.",
+            "Only one extraction run found. "
+            "Request a new export from the provider and run 'moveon extract' again.",
             err=True,
         )
         raise typer.Exit(1)
@@ -467,9 +467,9 @@ def diff(
 
     if old_run.tool_version != new_run.tool_version:
         typer.echo(
-            f"Warning: Runs stammen aus verschiedenen moveon-Versionen "
+            f"Warning: runs come from different moveon versions "
             f"({old_run.tool_version}, {new_run.tool_version}). "
-            f"Ergebnisse können abweichen.",
+            f"Results may differ.",
             err=True,
         )
 
@@ -563,15 +563,15 @@ def escalate(
 
     if not pm.erasure_sent_at:
         typer.echo(
-            f"Kein Löschantrag für '{provider}' vermerkt. "
-            "Zuerst 'moveon track' ausführen.",
+            f"No erasure request recorded for '{provider}'. "
+            "Run 'moveon track' first.",
             err=True,
         )
         raise typer.Exit(1)
 
     dpa = get_dpa_for_provider(provider, country)
     if dpa is None:
-        typer.echo("Keine zuständige Datenschutzbehörde gefunden.", err=True)
+        typer.echo("No responsible data protection authority found.", err=True)
         raise typer.Exit(1)
 
     subject = (
@@ -593,18 +593,18 @@ def escalate(
         dpa_email = dpa.get("email")
         if not dpa_email:
             typer.echo(
-                f"Kein E-Mail-Kontakt für {dpa['authority_name_en']}. "
-                f"Beschwerde über Webformular: {dpa.get('complaint_url', dpa['website'])}",
+                f"No email contact for {dpa['authority_name_en']}. "
+                f"File the complaint via web form: {dpa.get('complaint_url', dpa['website'])}",
                 err=True,
             )
             raise typer.Exit(1)
 
         is_tty = sys.stdin.isatty()
         if is_tty:
-            typer.echo(f"Sende Beschwerde an: {dpa_email}")
-            typer.echo(f"Von: {from_addr}")
+            typer.echo(f"Sending complaint to: {dpa_email}")
+            typer.echo(f"From: {from_addr}")
             typer.echo(f"Via: {smtp_host}:{smtp_port}")
-            confirm = typer.confirm("Beschwerde jetzt senden?")
+            confirm = typer.confirm("Send the complaint now?")
             if not confirm:
                 raise typer.Exit(0)
 
@@ -619,9 +619,9 @@ def escalate(
                 username=smtp_user,
                 password=smtp_pass,
             )
-            typer.echo(f"Beschwerde gesendet an {dpa_email}.")
+            typer.echo(f"Complaint sent to {dpa_email}.")
         except Exception as e:
-            typer.echo(f"SMTP-Fehler: {e}", err=True)
+            typer.echo(f"SMTP error: {e}", err=True)
             raise typer.Exit(1) from e
 
         pm.erasure_status = ErasureStatus.COMPLAINT_FILED
@@ -633,31 +633,31 @@ def escalate(
         if dpa_email:
             opened = open_mailto(dpa_email, subject, body)
             if opened:
-                typer.echo(f"E-Mail-Client geöffnet mit Beschwerde an {dpa_email}.")
-                typer.echo("Prüfen, absenden, und dann bestätigen.")
+                typer.echo(f"Opened your mail client with the complaint to {dpa_email}.")
+                typer.echo("Review it, send it, then confirm below.")
 
                 is_tty = sys.stdin.isatty()
                 if is_tty:
-                    confirm = typer.confirm("Beschwerde abgesendet?")
+                    confirm = typer.confirm("Did you send the complaint?")
                     if confirm:
                         pm.erasure_status = ErasureStatus.COMPLAINT_FILED
                         write_manifest(bp, manifest)
-                        typer.echo("Status auf 'complaint_filed' gesetzt.")
+                        typer.echo("Status set to 'complaint_filed'.")
             else:
-                typer.echo("Kein E-Mail-Client verfügbar. Beschwerde als Text:", err=True)
+                typer.echo("No mail client available. Complaint text:", err=True)
                 typer.echo("")
-                typer.echo(f"An: {dpa_email}")
-                typer.echo(f"Betreff: {subject}")
+                typer.echo(f"To: {dpa_email}")
+                typer.echo(f"Subject: {subject}")
                 typer.echo("")
                 typer.echo(body)
         else:
             typer.echo(
-                f"Kein E-Mail-Kontakt für {dpa['authority_name_en']}.",
+                f"No email contact for {dpa['authority_name_en']}.",
                 err=True,
             )
             complaint_url = dpa.get("complaint_url", dpa["website"])
-            typer.echo(f"Beschwerde über Webformular: {complaint_url}", err=True)
+            typer.echo(f"File the complaint via web form: {complaint_url}", err=True)
             typer.echo("")
-            typer.echo("Beschwerdetext:")
+            typer.echo("Complaint text:")
             typer.echo("")
             typer.echo(body)

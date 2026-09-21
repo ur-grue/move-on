@@ -150,7 +150,7 @@ class TestTrackCommand:
             app, ["track", "openai", "--sent", "2026-08-01", "--out", str(tmp_bundle)]
         )
         assert result.exit_code == 0
-        assert "Data Protection" in result.output or "Behörde" in result.output
+        assert "Data Protection" in result.output
 
     def test_track_with_country(self, tmp_bundle: Path):
         self._setup_manifest(tmp_bundle)
@@ -223,7 +223,7 @@ class TestStatusWithErasure:
         write_manifest(bp, manifest)
         result = runner.invoke(app, ["status", "--out", str(tmp_bundle)])
         assert result.exit_code == 0
-        assert "Noch nicht versendet" in result.output
+        assert "not sent yet" in result.output
 
     def test_status_json_includes_erasure(self, tmp_bundle: Path):
         self._setup_with_erasure(tmp_bundle)
@@ -241,7 +241,7 @@ class TestStatusWithErasure:
         self._setup_with_erasure(tmp_bundle, ErasureStatus.COMPLAINT_FILED)
         result = runner.invoke(app, ["status", "--out", str(tmp_bundle)])
         assert result.exit_code == 0
-        assert "Beschwerde eingereicht" in result.output
+        assert "complaint filed" in result.output
 
     def test_help_shows_track(self):
         result = runner.invoke(app, ["--help"])

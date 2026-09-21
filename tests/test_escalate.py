@@ -122,7 +122,7 @@ class TestEscalateCommand:
         _setup_manifest(tmp_bundle)
         result = runner.invoke(app, ["escalate", "openai", "--out", str(tmp_bundle)])
         assert result.exit_code == 0
-        assert "Art. 77" in result.output or "Beschwerde" in result.output
+        assert "Art. 77" in result.output
 
     def test_escalate_with_country(self, tmp_bundle: Path):
         _setup_manifest(tmp_bundle)
@@ -131,7 +131,7 @@ class TestEscalateCommand:
                 app, ["escalate", "openai", "--country", "DE", "--out", str(tmp_bundle)]
             )
         assert result.exit_code == 0
-        assert "bfdi" in result.output or "Beschwerde" in result.output
+        assert "bfdi" in result.output
 
     def test_escalate_english(self, tmp_bundle: Path):
         _setup_manifest(tmp_bundle)
@@ -182,7 +182,7 @@ class TestEscalateCommand:
                 ["escalate", "mistral", "--country", "FR", "--out", str(tmp_bundle)],
             )
         assert result.exit_code == 0
-        assert "Webformular" in result.output or "cnil.fr" in result.output
+        assert "web form" in result.output or "cnil.fr" in result.output
 
     def test_help_shows_escalate(self):
         result = runner.invoke(app, ["--help"])
