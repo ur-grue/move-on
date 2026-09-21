@@ -4,6 +4,7 @@ from pathlib import Path
 
 from moveon.bundle import (
     ensure_bundle,
+    ensure_provider_dir,
     read_manifest,
     sha256_file,
     write_jsonl,
@@ -22,6 +23,12 @@ class TestBundleCreation:
         bp = ensure_bundle(tmp_bundle)
         stat = bp.stat()
         assert oct(stat.st_mode & 0o777) == "0o700"
+
+    def test_raw_dirs_permissions_0700(self, tmp_bundle: Path):
+        bp = ensure_bundle(tmp_bundle)
+        provider_dir = ensure_provider_dir(bp, "openai")
+        for directory in (bp / "raw", provider_dir):
+            assert oct(directory.stat().st_mode & 0o777) == "0o700"
 
     def test_inner_gitignore_created(self, tmp_bundle: Path):
         bp = ensure_bundle(tmp_bundle)

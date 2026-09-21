@@ -4,7 +4,7 @@ import calendar
 import hashlib
 import json
 from datetime import date, datetime
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
@@ -55,7 +55,7 @@ class ManifestRun(BaseModel):
         return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
-class ErasureStatus(str, Enum):
+class ErasureStatus(StrEnum):
     PENDING = "pending"
     SENT = "sent"
     OVERDUE = "overdue"

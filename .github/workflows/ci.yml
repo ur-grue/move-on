@@ -21,10 +21,13 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: pip install -e ".[dev]" mypy
+        run: pip install -e ".[dev]"
 
       - name: Lint
         run: ruff check .
+
+      - name: Format check
+        run: ruff format --check .
 
       - name: Type check
         run: mypy src/

@@ -76,8 +76,7 @@ class AnthropicParser(BaseParser):
             with zipfile.ZipFile(path) as zf:
                 names = zf.namelist()
                 return any(
-                    n.endswith("conversations.json") or n.endswith("chats.json")
-                    for n in names
+                    n.endswith("conversations.json") or n.endswith("chats.json") for n in names
                 )
         except (zipfile.BadZipFile, OSError):
             return False
@@ -103,9 +102,7 @@ class AnthropicParser(BaseParser):
             raise ParseError(f"Invalid JSON in conversations file: {e}") from e
 
         if not isinstance(data, list):
-            raise ParseError(
-                f"Expected a list in conversations file, got {type(data).__name__}"
-            )
+            raise ParseError(f"Expected a list in conversations file, got {type(data).__name__}")
 
         skipped = 0
         for conv in data:

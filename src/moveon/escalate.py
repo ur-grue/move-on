@@ -58,18 +58,20 @@ def _build_complaint_de(
     if erasure_path.exists():
         lines.append(f"- Kopie des Löschantrags liegt bei: {erasure_path.name}")
 
-    lines.extend([
-        "",
-        "Ich bitte um Prüfung und Durchsetzung meiner Rechte.",
-        "",
-        "Mit freundlichen Grüßen",
-        "$NAME",
-        "$ACCOUNT_EMAIL",
-        "",
-        "---",
-        "Erstellt mit Move On (https://github.com/ur-grue/move-on)",
-        "Kein Rechtsrat. Datenschutzrechtliche Beratung empfohlen.",
-    ])
+    lines.extend(
+        [
+            "",
+            "Ich bitte um Prüfung und Durchsetzung meiner Rechte.",
+            "",
+            "Mit freundlichen Grüßen",
+            "$NAME",
+            "$ACCOUNT_EMAIL",
+            "",
+            "---",
+            "Erstellt mit Move On (https://github.com/ur-grue/move-on)",
+            "Kein Rechtsrat. Datenschutzrechtliche Beratung empfohlen.",
+        ]
+    )
     return "\n".join(lines)
 
 
@@ -110,18 +112,20 @@ def _build_complaint_en(
     if erasure_path.exists():
         lines.append(f"- Copy of erasure request attached: {erasure_path.name}")
 
-    lines.extend([
-        "",
-        "I request that you investigate and enforce my rights.",
-        "",
-        "Yours faithfully,",
-        "$NAME",
-        "$ACCOUNT_EMAIL",
-        "",
-        "---",
-        "Generated with Move On (https://github.com/ur-grue/move-on)",
-        "Not legal advice. Data protection counsel recommended.",
-    ])
+    lines.extend(
+        [
+            "",
+            "I request that you investigate and enforce my rights.",
+            "",
+            "Yours faithfully,",
+            "$NAME",
+            "$ACCOUNT_EMAIL",
+            "",
+            "---",
+            "Generated with Move On (https://github.com/ur-grue/move-on)",
+            "Not legal advice. Data protection counsel recommended.",
+        ]
+    )
     return "\n".join(lines)
 
 

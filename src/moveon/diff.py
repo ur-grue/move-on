@@ -19,9 +19,7 @@ class ConversationSummary:
 class DiffResult:
     added: list[ConversationSummary] = field(default_factory=list)
     removed: list[ConversationSummary] = field(default_factory=list)
-    changed: list[tuple[ConversationSummary, ConversationSummary]] = field(
-        default_factory=list
-    )
+    changed: list[tuple[ConversationSummary, ConversationSummary]] = field(default_factory=list)
     unchanged: int = 0
 
 
@@ -32,9 +30,7 @@ def _load_conversations(jsonl_path: Path) -> dict[str, ConversationSummary]:
             continue
         data = json.loads(line)
         messages = data.get("messages", [])
-        content_hash = sha256_string(
-            json.dumps(messages, sort_keys=True, ensure_ascii=False)
-        )
+        content_hash = sha256_string(json.dumps(messages, sort_keys=True, ensure_ascii=False))
         meta = data.get("metadata", {})
         conv_id = meta.get("conversation_id", "")
         summary = ConversationSummary(

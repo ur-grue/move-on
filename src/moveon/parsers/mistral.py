@@ -81,10 +81,7 @@ class MistralParser(BaseParser):
         try:
             with zipfile.ZipFile(path) as zf:
                 names = zf.namelist()
-                return any(
-                    name.startswith("chat-") and name.endswith(".json")
-                    for name in names
-                )
+                return any(name.startswith("chat-") and name.endswith(".json") for name in names)
         except (zipfile.BadZipFile, OSError):
             return False
 

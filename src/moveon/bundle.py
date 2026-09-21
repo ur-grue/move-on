@@ -39,8 +39,11 @@ def _write_secure(path: Path, content: str) -> None:
 
 
 def ensure_provider_dir(bp: Path, provider: str) -> Path:
-    raw_dir = bp / "raw" / provider
-    raw_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
+    # mkdir(parents=True) applies the mode only to the leaf; create raw/ explicitly.
+    raw_root = bp / "raw"
+    raw_root.mkdir(mode=0o700, exist_ok=True)
+    raw_dir = raw_root / provider
+    raw_dir.mkdir(mode=0o700, exist_ok=True)
     return raw_dir
 
 

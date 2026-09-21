@@ -72,7 +72,10 @@ class TestMistralParserParse:
         parser = MistralParser()
         conversations = list(parser.parse(mistral_zip))
         first = conversations[0]
-        assert "decorator" in first.metadata.conversation_title.lower() or first.metadata.conversation_title != ""
+        assert (
+            "decorator" in first.metadata.conversation_title.lower()
+            or first.metadata.conversation_title != ""
+        )
 
     def test_roles_valid(self, mistral_zip: Path):
         parser = MistralParser()

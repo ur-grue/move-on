@@ -45,7 +45,6 @@ class TestEraseGeneration:
         stat = f.stat()
         assert oct(stat.st_mode & 0o777) == "0o600"
 
-
     def test_xai_template(self, tmp_bundle: Path):
         bp = ensure_bundle(tmp_bundle)
         f = generate_erasure(bp, "xai", "de")

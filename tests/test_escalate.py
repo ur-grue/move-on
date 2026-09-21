@@ -108,9 +108,7 @@ class TestEscalateCommand:
     @patch("moveon.escalate.open_mailto", return_value=True)
     def test_escalate_opens_mailto(self, mock_mailto, tmp_bundle: Path):
         _setup_manifest(tmp_bundle)
-        result = runner.invoke(
-            app, ["escalate", "openai", "--out", str(tmp_bundle)], input="n\n"
-        )
+        result = runner.invoke(app, ["escalate", "openai", "--out", str(tmp_bundle)], input="n\n")
         assert result.exit_code == 0
         mock_mailto.assert_called_once()
         call_args = mock_mailto.call_args
@@ -122,7 +120,7 @@ class TestEscalateCommand:
         _setup_manifest(tmp_bundle)
         result = runner.invoke(app, ["escalate", "openai", "--out", str(tmp_bundle)])
         assert result.exit_code == 0
-        assert "Art. 77" in result.output or "Beschwerde" in result.output
+        assert "Art. 77" in result.output
 
     def test_escalate_with_country(self, tmp_bundle: Path):
         _setup_manifest(tmp_bundle)
@@ -131,7 +129,7 @@ class TestEscalateCommand:
                 app, ["escalate", "openai", "--country", "DE", "--out", str(tmp_bundle)]
             )
         assert result.exit_code == 0
-        assert "bfdi" in result.output or "Beschwerde" in result.output
+        assert "bfdi" in result.output
 
     def test_escalate_english(self, tmp_bundle: Path):
         _setup_manifest(tmp_bundle)
@@ -155,7 +153,15 @@ class TestEscalateCommand:
         _setup_manifest(tmp_bundle)
         result = runner.invoke(
             app,
-            ["escalate", "openai", "--send", "--smtp-host", "smtp.test.com", "--out", str(tmp_bundle)],
+            [
+                "escalate",
+                "openai",
+                "--send",
+                "--smtp-host",
+                "smtp.test.com",
+                "--out",
+                str(tmp_bundle),
+            ],
         )
         assert result.exit_code == 1
         assert "--from" in result.output
@@ -182,7 +188,7 @@ class TestEscalateCommand:
                 ["escalate", "mistral", "--country", "FR", "--out", str(tmp_bundle)],
             )
         assert result.exit_code == 0
-        assert "Webformular" in result.output or "cnil.fr" in result.output
+        assert "web form" in result.output or "cnil.fr" in result.output
 
     def test_help_shows_escalate(self):
         result = runner.invoke(app, ["--help"])

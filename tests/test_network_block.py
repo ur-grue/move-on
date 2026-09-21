@@ -121,8 +121,10 @@ class TestNetworkBlock:
             app,
             ["track", "openai", "--sent", "2026-07-01", "--out", str(tmp_path)],
         )
-        with patch("socket.socket", BlockedSocket), \
-             patch("moveon.escalate.open_mailto", return_value=False):
+        with (
+            patch("socket.socket", BlockedSocket),
+            patch("moveon.escalate.open_mailto", return_value=False),
+        ):
             result = runner.invoke(
                 app,
                 ["escalate", "openai", "--out", str(tmp_path)],

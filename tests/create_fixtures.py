@@ -28,7 +28,10 @@ def create_openai_fixture():
                     "children": ["msg-1"],
                     "message": {
                         "author": {"role": "system"},
-                        "content": {"content_type": "text", "parts": ["You are a helpful assistant."]},
+                        "content": {
+                            "content_type": "text",
+                            "parts": ["You are a helpful assistant."],
+                        },
                     },
                 },
                 "msg-1": {
@@ -37,7 +40,10 @@ def create_openai_fixture():
                     "children": ["msg-2", "msg-2-branch"],
                     "message": {
                         "author": {"role": "user"},
-                        "content": {"content_type": "text", "parts": ["How do I read a file in Python?"]},
+                        "content": {
+                            "content_type": "text",
+                            "parts": ["How do I read a file in Python?"],
+                        },
                     },
                 },
                 "msg-2": {
@@ -46,7 +52,10 @@ def create_openai_fixture():
                     "children": ["msg-3"],
                     "message": {
                         "author": {"role": "assistant"},
-                        "content": {"content_type": "text", "parts": ["Use open() with a context manager."]},
+                        "content": {
+                            "content_type": "text",
+                            "parts": ["Use open() with a context manager."],
+                        },
                     },
                 },
                 "msg-2-branch": {
@@ -55,7 +64,10 @@ def create_openai_fixture():
                     "children": [],
                     "message": {
                         "author": {"role": "assistant"},
-                        "content": {"content_type": "text", "parts": ["You can use pathlib.Path.read_text()."]},
+                        "content": {
+                            "content_type": "text",
+                            "parts": ["You can use pathlib.Path.read_text()."],
+                        },
                     },
                 },
                 "msg-3": {
@@ -88,7 +100,10 @@ def create_openai_fixture():
                     "children": ["msg-2"],
                     "message": {
                         "author": {"role": "user"},
-                        "content": {"content_type": "text", "parts": ["Generate an image of a cat"]},
+                        "content": {
+                            "content_type": "text",
+                            "parts": ["Generate an image of a cat"],
+                        },
                     },
                 },
                 "msg-2": {
@@ -97,10 +112,16 @@ def create_openai_fixture():
                     "children": [],
                     "message": {
                         "author": {"role": "assistant"},
-                        "content": {"content_type": "multimodal_text", "parts": [
-                            "Here's the image:",
-                            {"content_type": "image_asset_pointer", "asset_pointer": "file-abc123"}
-                        ]},
+                        "content": {
+                            "content_type": "multimodal_text",
+                            "parts": [
+                                "Here's the image:",
+                                {
+                                    "content_type": "image_asset_pointer",
+                                    "asset_pointer": "file-abc123",
+                                },
+                            ],
+                        },
                     },
                 },
             },
@@ -167,9 +188,15 @@ def create_anthropic_fixture():
             "updated_at": "2024-01-15T10:30:00Z",
             "chat_messages": [
                 {"sender": "human", "text": "What is ownership in Rust?"},
-                {"sender": "assistant", "text": "Ownership is Rust's memory management system. Each value has a single owner."},
+                {
+                    "sender": "assistant",
+                    "text": "Ownership is Rust's memory management system. Each value has a single owner.",
+                },
                 {"sender": "human", "text": "Can you show an example?"},
-                {"sender": "assistant", "text": "let s1 = String::from(\"hello\");\nlet s2 = s1; // s1 is moved to s2"},
+                {
+                    "sender": "assistant",
+                    "text": 'let s1 = String::from("hello");\nlet s2 = s1; // s1 is moved to s2',
+                },
             ],
         },
         {
@@ -183,7 +210,11 @@ def create_anthropic_fixture():
                     "sender": "assistant",
                     "text": [
                         {"type": "text", "text": "Let me search for that."},
-                        {"type": "tool_use", "name": "web_search", "input": {"query": "weather today"}},
+                        {
+                            "type": "tool_use",
+                            "name": "web_search",
+                            "input": {"query": "weather today"},
+                        },
                     ],
                 },
                 {"sender": "human", "text": "Thanks!"},
@@ -236,7 +267,12 @@ def create_xai_fixture():
                 },
                 "responses": [
                     {"response": {"sender": "human", "message": "What is a list comprehension?"}},
-                    {"response": {"sender": "assistant", "message": "A list comprehension is a concise way to create lists."}},
+                    {
+                        "response": {
+                            "sender": "assistant",
+                            "message": "A list comprehension is a concise way to create lists.",
+                        }
+                    },
                     {"response": {"sender": "human", "message": "Show me an example."}},
                     {"response": {"sender": "assistant", "message": "[x**2 for x in range(10)]"}},
                 ],
@@ -250,7 +286,12 @@ def create_xai_fixture():
                 },
                 "responses": [
                     {"response": {"sender": "human", "message": "Draw me a sunset"}},
-                    {"response": {"sender": "ASSISTANT", "message": "Here is a beautiful sunset image."}},
+                    {
+                        "response": {
+                            "sender": "ASSISTANT",
+                            "message": "Here is a beautiful sunset image.",
+                        }
+                    },
                 ],
             },
             {

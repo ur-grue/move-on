@@ -11,12 +11,14 @@ from moveon.exceptions import ParseError
 from moveon.models import Conversation, Message, Metadata
 from moveon.parsers.base import BaseParser
 
-META_AI_SENDER_NAMES = frozenset({
-    "Meta AI",
-    "Meta-KI",
-    "IA de Meta",
-    "IA Meta",
-})
+META_AI_SENDER_NAMES = frozenset(
+    {
+        "Meta AI",
+        "Meta-KI",
+        "IA de Meta",
+        "IA Meta",
+    }
+)
 
 MESSAGE_PATTERNS = [
     "message_1.json",
@@ -30,10 +32,7 @@ def _is_meta_ai_thread(data: dict) -> bool:
         return True
 
     participants = data.get("participants", [])
-    return any(
-        p.get("name", "") in META_AI_SENDER_NAMES
-        for p in participants
-    )
+    return any(p.get("name", "") in META_AI_SENDER_NAMES for p in participants)
 
 
 def _timestamp_ms_to_iso(ts_ms: int | float | None) -> str:

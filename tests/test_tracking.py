@@ -94,19 +94,33 @@ class TestTrackCommand:
         write_manifest(bp, manifest)
 
     def test_track_sets_sent_date(self, tmp_bundle: Path):
+        # Use today so the deadline is always in the future, regardless of when tests run.
+        sent = date.today()
+        deadline = calculate_deadline(sent)
         self._setup_manifest(tmp_bundle)
         result = runner.invoke(
-            app, ["track", "openai", "--sent", "2026-08-01", "--out", str(tmp_bundle)]
+            app, ["track", "openai", "--sent", sent.isoformat(), "--out", str(tmp_bundle)]
         )
         assert result.exit_code == 0
-        assert "2026-08-01" in result.output
-        assert "2026-09-01" in result.output
+        assert sent.isoformat() in result.output
+        assert deadline.isoformat() in result.output
 
         manifest = read_manifest(tmp_bundle / "MOVEON.d")
         pm = manifest.providers["openai"]
-        assert pm.erasure_sent_at == "2026-08-01"
-        assert pm.erasure_deadline == "2026-09-01"
+        assert pm.erasure_sent_at == sent.isoformat()
+        assert pm.erasure_deadline == deadline.isoformat()
         assert pm.erasure_status == ErasureStatus.SENT
+
+    def test_track_past_date_marks_overdue(self, tmp_bundle: Path):
+        self._setup_manifest(tmp_bundle)
+        result = runner.invoke(
+            app, ["track", "openai", "--sent", "2020-01-01", "--out", str(tmp_bundle)]
+        )
+        assert result.exit_code == 0
+        assert "OVERDUE" in result.output
+
+        manifest = read_manifest(tmp_bundle / "MOVEON.d")
+        assert manifest.providers["openai"].erasure_status == ErasureStatus.OVERDUE
 
     def test_track_invalid_date(self, tmp_bundle: Path):
         self._setup_manifest(tmp_bundle)
@@ -136,13 +150,22 @@ class TestTrackCommand:
             app, ["track", "openai", "--sent", "2026-08-01", "--out", str(tmp_bundle)]
         )
         assert result.exit_code == 0
-        assert "Data Protection" in result.output or "Behörde" in result.output
+        assert "Data Protection" in result.output
 
     def test_track_with_country(self, tmp_bundle: Path):
         self._setup_manifest(tmp_bundle)
         result = runner.invoke(
             app,
-            ["track", "openai", "--sent", "2026-08-01", "--country", "DE", "--out", str(tmp_bundle)],
+            [
+                "track",
+                "openai",
+                "--sent",
+                "2026-08-01",
+                "--country",
+                "DE",
+                "--out",
+                str(tmp_bundle),
+            ],
         )
         assert result.exit_code == 0
         assert "Datenschutz" in result.output or "Data Protection" in result.output
@@ -151,16 +174,23 @@ class TestTrackCommand:
         self._setup_manifest(tmp_bundle)
         result = runner.invoke(
             app,
-            ["track", "openai", "--sent", "2026-08-01", "--country", "XX", "--out", str(tmp_bundle)],
+            [
+                "track",
+                "openai",
+                "--sent",
+                "2026-08-01",
+                "--country",
+                "XX",
+                "--out",
+                str(tmp_bundle),
+            ],
         )
         assert result.exit_code == 1
         assert "Unknown country" in result.output
 
     def test_track_regenerates_tracking_md(self, tmp_bundle: Path):
         self._setup_manifest(tmp_bundle)
-        runner.invoke(
-            app, ["track", "openai", "--sent", "2026-08-01", "--out", str(tmp_bundle)]
-        )
+        runner.invoke(app, ["track", "openai", "--sent", "2026-08-01", "--out", str(tmp_bundle)])
         tracking_path = tmp_bundle / "MOVEON.d" / "erase" / "TRACKING.md"
         assert tracking_path.exists()
         content = tracking_path.read_text(encoding="utf-8")
@@ -169,7 +199,9 @@ class TestTrackCommand:
 
 
 class TestStatusWithErasure:
-    def _setup_with_erasure(self, tmp_bundle: Path, status: ErasureStatus = ErasureStatus.SENT) -> None:
+    def _setup_with_erasure(
+        self, tmp_bundle: Path, status: ErasureStatus = ErasureStatus.SENT
+    ) -> None:
         bp = ensure_bundle(tmp_bundle)
         manifest = Manifest()
         run = ManifestRun(
@@ -209,7 +241,7 @@ class TestStatusWithErasure:
         write_manifest(bp, manifest)
         result = runner.invoke(app, ["status", "--out", str(tmp_bundle)])
         assert result.exit_code == 0
-        assert "Noch nicht versendet" in result.output
+        assert "not sent yet" in result.output
 
     def test_status_json_includes_erasure(self, tmp_bundle: Path):
         self._setup_with_erasure(tmp_bundle)
@@ -227,7 +259,7 @@ class TestStatusWithErasure:
         self._setup_with_erasure(tmp_bundle, ErasureStatus.COMPLAINT_FILED)
         result = runner.invoke(app, ["status", "--out", str(tmp_bundle)])
         assert result.exit_code == 0
-        assert "Beschwerde eingereicht" in result.output
+        assert "complaint filed" in result.output
 
     def test_help_shows_track(self):
         result = runner.invoke(app, ["--help"])
