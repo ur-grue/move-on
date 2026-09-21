@@ -211,7 +211,7 @@ def guide(
 def erase(
     provider: str = typer.Argument(None, help="Provider name (optional with --all)"),
     all_providers: bool = typer.Option(False, "--all", help="Generate for all extracted providers"),
-    lang: str = typer.Option("de", "--lang", help="Language (de or en)"),
+    lang: str = typer.Option("en", "--lang", help="Letter language: en (default) or de"),
     out: Path = typer.Option(Path("."), "--out", help="Parent directory for MOVEON.d/"),
 ) -> None:
     """Generate GDPR erasure request letters."""
@@ -327,7 +327,7 @@ def track(
             typer.echo(f"  Complaint email:       {dpa['email']}")
         elif dpa.get("complaint_url"):
             typer.echo(f"  Complaint form:        {dpa['complaint_url']}")
-        typer.echo(f"  Website:            {dpa['website']}")
+        typer.echo(f"  Website:               {dpa['website']}")
 
     _regenerate_tracking(bp, manifest)
 
@@ -534,7 +534,7 @@ def diff(
 @app.command()
 def escalate(
     provider: str = typer.Argument(help="Provider name"),
-    lang: str = typer.Option("de", "--lang", help="Language (de or en)"),
+    lang: str = typer.Option("en", "--lang", help="Letter language: en (default) or de"),
     country: str = typer.Option(
         None,
         "--country",
