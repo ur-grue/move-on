@@ -7,6 +7,8 @@ class Moveon < Formula
   sha256 "016872be11e9218a3d944a39f0fd1c23cef35d574d39ea6e7de3abb090a28133"
   license "MIT"
 
+  # pydantic-core ships as an sdist that maturin compiles at install time
+  depends_on "rust" => :build
   depends_on "python@3.13"
 
   resource "typer" do
