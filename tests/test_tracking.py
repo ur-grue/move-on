@@ -94,19 +94,33 @@ class TestTrackCommand:
         write_manifest(bp, manifest)
 
     def test_track_sets_sent_date(self, tmp_bundle: Path):
+        # Use today so the deadline is always in the future, regardless of when tests run.
+        sent = date.today()
+        deadline = calculate_deadline(sent)
         self._setup_manifest(tmp_bundle)
         result = runner.invoke(
-            app, ["track", "openai", "--sent", "2026-08-01", "--out", str(tmp_bundle)]
+            app, ["track", "openai", "--sent", sent.isoformat(), "--out", str(tmp_bundle)]
         )
         assert result.exit_code == 0
-        assert "2026-08-01" in result.output
-        assert "2026-09-01" in result.output
+        assert sent.isoformat() in result.output
+        assert deadline.isoformat() in result.output
 
         manifest = read_manifest(tmp_bundle / "MOVEON.d")
         pm = manifest.providers["openai"]
-        assert pm.erasure_sent_at == "2026-08-01"
-        assert pm.erasure_deadline == "2026-09-01"
+        assert pm.erasure_sent_at == sent.isoformat()
+        assert pm.erasure_deadline == deadline.isoformat()
         assert pm.erasure_status == ErasureStatus.SENT
+
+    def test_track_past_date_marks_overdue(self, tmp_bundle: Path):
+        self._setup_manifest(tmp_bundle)
+        result = runner.invoke(
+            app, ["track", "openai", "--sent", "2020-01-01", "--out", str(tmp_bundle)]
+        )
+        assert result.exit_code == 0
+        assert "OVERDUE" in result.output
+
+        manifest = read_manifest(tmp_bundle / "MOVEON.d")
+        assert manifest.providers["openai"].erasure_status == ErasureStatus.OVERDUE
 
     def test_track_invalid_date(self, tmp_bundle: Path):
         self._setup_manifest(tmp_bundle)
