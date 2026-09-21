@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Consistent English CLI output (letter templates remain de/en)
+- Corrupt or invalid export archives report a one-line error instead of a traceback
+- Tracebacks no longer print local variables (they can contain chat content)
+- `MOVEON.d/raw/` is created with 0700 like the rest of the bundle
+- CI: ruff format check, ruff >= 0.13, mypy pinned in the dev extra
+- Release workflow: tag `v*` builds, publishes to PyPI via trusted publishing, and creates a GitHub release
+- Removed internal planning documents from the repository
+
 ## 1.0.0 — 2026-08-13
 
 - `moveon escalate` generates Art. 77 GDPR complaints to responsible DPAs
