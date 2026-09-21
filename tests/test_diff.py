@@ -28,27 +28,43 @@ def _make_conv(conv_id: str, title: str, messages: list[dict]) -> dict:
     }
 
 
-CONV_A = _make_conv("conv-a", "Topic A", [
-    {"role": "user", "content": "Hello"},
-    {"role": "assistant", "content": "Hi there"},
-])
+CONV_A = _make_conv(
+    "conv-a",
+    "Topic A",
+    [
+        {"role": "user", "content": "Hello"},
+        {"role": "assistant", "content": "Hi there"},
+    ],
+)
 
-CONV_B = _make_conv("conv-b", "Topic B", [
-    {"role": "user", "content": "Question"},
-    {"role": "assistant", "content": "Answer"},
-])
+CONV_B = _make_conv(
+    "conv-b",
+    "Topic B",
+    [
+        {"role": "user", "content": "Question"},
+        {"role": "assistant", "content": "Answer"},
+    ],
+)
 
-CONV_C = _make_conv("conv-c", "Topic C", [
-    {"role": "user", "content": "New topic"},
-    {"role": "assistant", "content": "Interesting"},
-])
+CONV_C = _make_conv(
+    "conv-c",
+    "Topic C",
+    [
+        {"role": "user", "content": "New topic"},
+        {"role": "assistant", "content": "Interesting"},
+    ],
+)
 
-CONV_A_MODIFIED = _make_conv("conv-a", "Topic A", [
-    {"role": "user", "content": "Hello"},
-    {"role": "assistant", "content": "Hi there"},
-    {"role": "user", "content": "Follow up"},
-    {"role": "assistant", "content": "Sure thing"},
-])
+CONV_A_MODIFIED = _make_conv(
+    "conv-a",
+    "Topic A",
+    [
+        {"role": "user", "content": "Hello"},
+        {"role": "assistant", "content": "Hi there"},
+        {"role": "user", "content": "Follow up"},
+        {"role": "assistant", "content": "Sure thing"},
+    ],
+)
 
 
 class TestComputeDiff:
@@ -127,7 +143,9 @@ class TestDiffCLI:
 
     def test_diff_two_runs(self, openai_zip: Path, tmp_path: Path):
         runner.invoke(app, ["extract", "openai", str(openai_zip), "--out", str(tmp_path)])
-        runner.invoke(app, ["extract", "openai", str(openai_zip), "--out", str(tmp_path), "--force"])
+        runner.invoke(
+            app, ["extract", "openai", str(openai_zip), "--out", str(tmp_path), "--force"]
+        )
         result = runner.invoke(app, ["diff", "openai", "--out", str(tmp_path)])
         assert result.exit_code == 0
         assert "Unchanged" in result.output

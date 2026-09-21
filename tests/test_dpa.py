@@ -6,9 +6,33 @@ from moveon.dpa import get_dpa, get_dpa_for_provider, list_countries
 class TestDpaDatabase:
     def test_all_eu_countries(self):
         eu_codes = {
-            "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR",
-            "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL",
-            "PL", "PT", "RO", "SK", "SI", "ES", "SE",
+            "AT",
+            "BE",
+            "BG",
+            "HR",
+            "CY",
+            "CZ",
+            "DK",
+            "EE",
+            "FI",
+            "FR",
+            "DE",
+            "GR",
+            "HU",
+            "IE",
+            "IT",
+            "LV",
+            "LT",
+            "LU",
+            "MT",
+            "NL",
+            "PL",
+            "PT",
+            "RO",
+            "SK",
+            "SI",
+            "ES",
+            "SE",
         }
         codes = set(list_countries())
         assert eu_codes.issubset(codes)
@@ -81,4 +105,6 @@ class TestDpaProviderRouting:
         from moveon.parsers import REGISTRY
 
         for provider in REGISTRY:
-            assert provider in PROVIDER_JURISDICTIONS, f"{provider} missing from PROVIDER_JURISDICTIONS"
+            assert provider in PROVIDER_JURISDICTIONS, (
+                f"{provider} missing from PROVIDER_JURISDICTIONS"
+            )

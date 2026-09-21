@@ -25,7 +25,9 @@ class BaseParser(ABC):
         """
 
     def _load_json_from_zip(
-        self, path: Path, filename_patterns: list[str],
+        self,
+        path: Path,
+        filename_patterns: list[str],
     ) -> tuple[list, str]:
         """Load and parse a JSON list from a ZIP archive.
 
@@ -57,9 +59,7 @@ class BaseParser(ABC):
             raise ParseError(f"Invalid JSON in {matched}: {e}") from e
 
         if not isinstance(data, list):
-            raise ParseError(
-                f"Expected a list in {matched}, got {type(data).__name__}"
-            )
+            raise ParseError(f"Expected a list in {matched}, got {type(data).__name__}")
 
         return data, matched
 

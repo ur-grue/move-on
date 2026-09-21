@@ -74,10 +74,7 @@ class XaiParser(BaseParser):
         try:
             with zipfile.ZipFile(path) as zf:
                 names = zf.namelist()
-                return any(
-                    name.endswith("prod-grok-backend.json")
-                    for name in names
-                )
+                return any(name.endswith("prod-grok-backend.json") for name in names)
         except (zipfile.BadZipFile, OSError):
             return False
 
@@ -103,9 +100,7 @@ class XaiParser(BaseParser):
         conversations = data.get("conversations", data if isinstance(data, list) else [])
 
         if not isinstance(conversations, list):
-            raise ParseError(
-                f"Expected conversations list, got {type(conversations).__name__}"
-            )
+            raise ParseError(f"Expected conversations list, got {type(conversations).__name__}")
 
         skipped = 0
         for conv_wrapper in conversations:

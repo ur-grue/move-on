@@ -51,8 +51,7 @@ def _check_zip_security(zip_path: Path) -> None:
             for info in zf.infolist():
                 if ".." in info.filename or info.filename.startswith("/"):
                     raise ParseError(
-                        f"Suspicious path in ZIP: {info.filename}. "
-                        "Possible path traversal attack."
+                        f"Suspicious path in ZIP: {info.filename}. Possible path traversal attack."
                     )
                 if info.flag_bits & 0x1:
                     raise ParseError(
@@ -280,8 +279,7 @@ def track(
 
     if country and country.upper() not in list_countries():
         typer.echo(
-            f"Unknown country code: {country}. "
-            f"Use ISO 3166-1 alpha-2 (e.g. DE, FR, AT).",
+            f"Unknown country code: {country}. Use ISO 3166-1 alpha-2 (e.g. DE, FR, AT).",
             err=True,
         )
         raise typer.Exit(1)
@@ -480,8 +478,7 @@ def diff(
 
     if not old_path.exists():
         typer.echo(
-            f"Archived run file not found: {old_path}. "
-            "Cannot compute diff without both run files.",
+            f"Archived run file not found: {old_path}. Cannot compute diff without both run files.",
             err=True,
         )
         raise typer.Exit(1)
@@ -563,8 +560,7 @@ def escalate(
 
     if not pm.erasure_sent_at:
         typer.echo(
-            f"No erasure request recorded for '{provider}'. "
-            "Run 'moveon track' first.",
+            f"No erasure request recorded for '{provider}'. Run 'moveon track' first.",
             err=True,
         )
         raise typer.Exit(1)

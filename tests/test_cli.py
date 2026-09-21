@@ -58,7 +58,9 @@ class TestGuide:
 
 class TestExtract:
     def test_extract_openai(self, openai_zip: Path, tmp_bundle: Path):
-        result = runner.invoke(app, ["extract", "openai", str(openai_zip), "--out", str(tmp_bundle)])
+        result = runner.invoke(
+            app, ["extract", "openai", str(openai_zip), "--out", str(tmp_bundle)]
+        )
         assert result.exit_code == 0
         assert "Extracted" in result.output
         assert "3 conversations" in result.output
@@ -70,13 +72,17 @@ class TestExtract:
         assert (bp / ".gitignore").exists()
 
     def test_extract_anthropic(self, anthropic_zip: Path, tmp_bundle: Path):
-        result = runner.invoke(app, ["extract", "anthropic", str(anthropic_zip), "--out", str(tmp_bundle)])
+        result = runner.invoke(
+            app, ["extract", "anthropic", str(anthropic_zip), "--out", str(tmp_bundle)]
+        )
         assert result.exit_code == 0
         assert "Extracted" in result.output
         assert "3 conversations" in result.output
 
     def test_extract_google(self, google_zip: Path, tmp_bundle: Path):
-        result = runner.invoke(app, ["extract", "google", str(google_zip), "--out", str(tmp_bundle)])
+        result = runner.invoke(
+            app, ["extract", "google", str(google_zip), "--out", str(tmp_bundle)]
+        )
         assert result.exit_code == 0
         assert "Extracted" in result.output
         assert "3 conversations" in result.output
@@ -103,7 +109,9 @@ class TestExtract:
         assert (bp / "raw" / "xai" / "messages.jsonl").exists()
 
     def test_extract_mistral(self, mistral_zip: Path, tmp_bundle: Path):
-        result = runner.invoke(app, ["extract", "mistral", str(mistral_zip), "--out", str(tmp_bundle)])
+        result = runner.invoke(
+            app, ["extract", "mistral", str(mistral_zip), "--out", str(tmp_bundle)]
+        )
         assert result.exit_code == 0
         assert "Extracted" in result.output
         assert "3 conversations" in result.output
@@ -112,7 +120,9 @@ class TestExtract:
         assert (bp / "raw" / "mistral" / "messages.jsonl").exists()
 
     def test_extract_perplexity(self, perplexity_zip: Path, tmp_bundle: Path):
-        result = runner.invoke(app, ["extract", "perplexity", str(perplexity_zip), "--out", str(tmp_bundle)])
+        result = runner.invoke(
+            app, ["extract", "perplexity", str(perplexity_zip), "--out", str(tmp_bundle)]
+        )
         assert result.exit_code == 0
         assert "Extracted" in result.output
         assert "3 conversations" in result.output
@@ -121,16 +131,22 @@ class TestExtract:
         assert (bp / "raw" / "perplexity" / "messages.jsonl").exists()
 
     def test_extract_corrupt_zip(self, corrupt_zip: Path, tmp_bundle: Path):
-        result = runner.invoke(app, ["extract", "openai", str(corrupt_zip), "--out", str(tmp_bundle)])
+        result = runner.invoke(
+            app, ["extract", "openai", str(corrupt_zip), "--out", str(tmp_bundle)]
+        )
         assert result.exit_code == 1
 
     def test_extract_unknown_provider(self, openai_zip: Path, tmp_bundle: Path):
-        result = runner.invoke(app, ["extract", "unknown", str(openai_zip), "--out", str(tmp_bundle)])
+        result = runner.invoke(
+            app, ["extract", "unknown", str(openai_zip), "--out", str(tmp_bundle)]
+        )
         assert result.exit_code == 1
 
     def test_double_extract_with_force(self, openai_zip: Path, tmp_bundle: Path):
         runner.invoke(app, ["extract", "openai", str(openai_zip), "--out", str(tmp_bundle)])
-        result = runner.invoke(app, ["extract", "openai", str(openai_zip), "--out", str(tmp_bundle), "--force"])
+        result = runner.invoke(
+            app, ["extract", "openai", str(openai_zip), "--out", str(tmp_bundle), "--force"]
+        )
         assert result.exit_code == 0
 
         bp = tmp_bundle / "MOVEON.d"
@@ -145,7 +161,9 @@ class TestExtract:
         assert gitignore.read_text().strip() == "*"
 
     def test_extraction_warning_shown(self, openai_zip: Path, tmp_bundle: Path):
-        result = runner.invoke(app, ["extract", "openai", str(openai_zip), "--out", str(tmp_bundle)])
+        result = runner.invoke(
+            app, ["extract", "openai", str(openai_zip), "--out", str(tmp_bundle)]
+        )
         assert "plaintext" in result.output or "plaintext" in (result.stderr or "")
 
     def test_jsonl_format(self, openai_zip: Path, tmp_bundle: Path):

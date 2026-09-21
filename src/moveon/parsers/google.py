@@ -117,10 +117,7 @@ class GoogleParser(BaseParser):
         try:
             with zipfile.ZipFile(path) as zf:
                 names = zf.namelist()
-                return any(
-                    name.endswith("MyActivity.json")
-                    for name in names
-                )
+                return any(name.endswith("MyActivity.json") for name in names)
         except (zipfile.BadZipFile, OSError):
             return False
 
@@ -128,7 +125,8 @@ class GoogleParser(BaseParser):
         data, _matched = self._load_json_from_zip(path, ACTIVITY_PATTERNS)
 
         gemini_entries = [
-            entry for entry in data
+            entry
+            for entry in data
             if entry.get("header", "") in ("Gemini Apps", "Gemini")
             or "Gemini" in str(entry.get("products", []))
         ]

@@ -108,9 +108,7 @@ class TestEscalateCommand:
     @patch("moveon.escalate.open_mailto", return_value=True)
     def test_escalate_opens_mailto(self, mock_mailto, tmp_bundle: Path):
         _setup_manifest(tmp_bundle)
-        result = runner.invoke(
-            app, ["escalate", "openai", "--out", str(tmp_bundle)], input="n\n"
-        )
+        result = runner.invoke(app, ["escalate", "openai", "--out", str(tmp_bundle)], input="n\n")
         assert result.exit_code == 0
         mock_mailto.assert_called_once()
         call_args = mock_mailto.call_args
@@ -155,7 +153,15 @@ class TestEscalateCommand:
         _setup_manifest(tmp_bundle)
         result = runner.invoke(
             app,
-            ["escalate", "openai", "--send", "--smtp-host", "smtp.test.com", "--out", str(tmp_bundle)],
+            [
+                "escalate",
+                "openai",
+                "--send",
+                "--smtp-host",
+                "smtp.test.com",
+                "--out",
+                str(tmp_bundle),
+            ],
         )
         assert result.exit_code == 1
         assert "--from" in result.output

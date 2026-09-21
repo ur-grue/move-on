@@ -156,7 +156,16 @@ class TestTrackCommand:
         self._setup_manifest(tmp_bundle)
         result = runner.invoke(
             app,
-            ["track", "openai", "--sent", "2026-08-01", "--country", "DE", "--out", str(tmp_bundle)],
+            [
+                "track",
+                "openai",
+                "--sent",
+                "2026-08-01",
+                "--country",
+                "DE",
+                "--out",
+                str(tmp_bundle),
+            ],
         )
         assert result.exit_code == 0
         assert "Datenschutz" in result.output or "Data Protection" in result.output
@@ -165,16 +174,23 @@ class TestTrackCommand:
         self._setup_manifest(tmp_bundle)
         result = runner.invoke(
             app,
-            ["track", "openai", "--sent", "2026-08-01", "--country", "XX", "--out", str(tmp_bundle)],
+            [
+                "track",
+                "openai",
+                "--sent",
+                "2026-08-01",
+                "--country",
+                "XX",
+                "--out",
+                str(tmp_bundle),
+            ],
         )
         assert result.exit_code == 1
         assert "Unknown country" in result.output
 
     def test_track_regenerates_tracking_md(self, tmp_bundle: Path):
         self._setup_manifest(tmp_bundle)
-        runner.invoke(
-            app, ["track", "openai", "--sent", "2026-08-01", "--out", str(tmp_bundle)]
-        )
+        runner.invoke(app, ["track", "openai", "--sent", "2026-08-01", "--out", str(tmp_bundle)])
         tracking_path = tmp_bundle / "MOVEON.d" / "erase" / "TRACKING.md"
         assert tracking_path.exists()
         content = tracking_path.read_text(encoding="utf-8")
@@ -183,7 +199,9 @@ class TestTrackCommand:
 
 
 class TestStatusWithErasure:
-    def _setup_with_erasure(self, tmp_bundle: Path, status: ErasureStatus = ErasureStatus.SENT) -> None:
+    def _setup_with_erasure(
+        self, tmp_bundle: Path, status: ErasureStatus = ErasureStatus.SENT
+    ) -> None:
         bp = ensure_bundle(tmp_bundle)
         manifest = Manifest()
         run = ManifestRun(
