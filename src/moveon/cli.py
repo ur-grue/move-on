@@ -17,6 +17,8 @@ app = typer.Typer(
     help="Extract your AI provider data. Request deletion. Move on.",
     no_args_is_help=True,
     add_completion=True,
+    # Tracebacks must never dump local variables: they can hold chat content.
+    pretty_exceptions_show_locals=False,
 )
 
 MAX_UNCOMPRESSED_SIZE = 10 * 1024 * 1024 * 1024  # 10 GB
@@ -98,6 +100,7 @@ def extract(
         write_jsonl,
         write_manifest,
     )
+    from moveon.exceptions import MoveonError
     from moveon.models import ManifestRun, now_iso
     from moveon.parsers import get_parser
 
@@ -107,7 +110,11 @@ def extract(
         typer.echo(str(e), err=True)
         raise typer.Exit(1) from e
 
-    _check_zip_security(export_zip)
+    try:
+        _check_zip_security(export_zip)
+    except MoveonError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1) from e
 
     parser = parser_cls()
     if not parser.validate(export_zip):
@@ -135,7 +142,11 @@ def extract(
         if not confirm:
             raise typer.Exit(0)
 
-    conversations = list(parser.parse(export_zip))
+    try:
+        conversations = list(parser.parse(export_zip))
+    except MoveonError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1) from e
     lines = []
     total_messages = 0
     for conv in conversations:

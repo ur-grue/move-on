@@ -135,6 +135,8 @@ class TestExtract:
             app, ["extract", "openai", str(corrupt_zip), "--out", str(tmp_bundle)]
         )
         assert result.exit_code == 1
+        assert "Not a valid ZIP file" in result.output
+        assert "Traceback" not in result.output
 
     def test_extract_unknown_provider(self, openai_zip: Path, tmp_bundle: Path):
         result = runner.invoke(
