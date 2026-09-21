@@ -5,6 +5,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
+from moveon import __version__
 from moveon.cli import app
 from moveon.guide import GUIDES
 from moveon.parsers import REGISTRY
@@ -21,7 +22,7 @@ class TestVersion:
     def test_version_flag(self):
         result = runner.invoke(app, ["--version"])
         assert result.exit_code == 0
-        assert "1.0.0" in result.output
+        assert result.output.strip() == f"moveon {__version__}"
 
 
 class TestHelp:
